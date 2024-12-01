@@ -1,3 +1,7 @@
+package main;
+
+import entidade.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,16 +13,19 @@ public class PainelJogo extends JPanel implements Runnable {
     final int tamanhoOrgTile = 16; //O jogo estará utilizando um tile map de 16x16 px
     final int escala = 3; //Multiplicador da escala para exibição em maiores resoluções
 
-    final int tamanhoTile = tamanhoOrgTile * escala; //Cálculo real do tamanho dos elementos na tela, no caso atual 48x48 px
-
+    public final int tamanhoTile = tamanhoOrgTile * escala; //Cálculo real do tamanho dos elementos na tela, no caso atual 48x48 px
     final int maxColTela = 16; //Número de colunas exibidas na tela
     final int maxLinTela = 12; //Número de linhas exibidas na tela
-
     final int larguraTela = tamanhoTile * maxColTela; //Define a largura da tela com base nos tamanhos anteriormente definidos (768 px)
     final int alturaTela = tamanhoTile * maxLinTela; //Define a altura da tela com base nos tamanhos anteriormente definidos (576 px)
 
-    controleTeclado conTec = new controleTeclado();
+    // FPS
+    int FPS = 60;
+    public static int globalFPS;
+
+    ControleTeclado conTec = new ControleTeclado();
     Thread threadJogo; //Pode ser iniciado e parado, mas fica ativo até que seja ordenado a parar
+    Player player = new Player(this,conTec);
 
     //Definições iniciais do jogador
     int playerX = 100;
@@ -36,41 +43,47 @@ public class PainelJogo extends JPanel implements Runnable {
 
 
     public void startThreadJogo() {
-        threadJogo = new Thread(this); //Definindo a threadJogo e utilizando a classe PainelJogo (this)
+        threadJogo = new Thread(this); //Definindo a threadJogo e utilizando a classe main.PainelJogo (this)
         threadJogo.start(); //Iniciando a threadJogo (consequentemente o metodo run também)
     }
     @Override
     public void run() {
-        //Esse metodo será iniciado assim que a threadJogo for iniciada
+
+        double intervaloFrame = 1000000000 / FPS; // Intervalo entre a exibição entre frames
+        double delta = 0; // Variável para verificação da exibição de frames
+        long ultRegist = System.nanoTime(); // Ultimo registro de tempo
+        long tempoAtual; // Variável usada para registro do tempo atual do programa em nanosegundos
+        long timer = 0; // Variável usada para contagem de 1 segundo
+        int contagemFrame = 0; // Variável usada para a contagem de quantos frames foram exibidos em 1 segundo
+
         while (threadJogo != null) {
+            //Esse metodo será iniciado assim que a threadJogo for iniciada
+            tempoAtual = System.nanoTime();
+            delta += (tempoAtual - ultRegist) / intervaloFrame;
 
-//          System.out.println("O loop está rodando");
+            timer += (tempoAtual - ultRegist);
+            ultRegist = tempoAtual;
 
-            //Atualizações: Atualiza coisas como a posição do personagem
-            update(); //Ativa esse metodo toda vez que o loop reinicia
+            if (delta >= 1) {
+                update();
+                repaint();
+                delta--;
+                contagemFrame++;
+            }
 
-            //Exibição: Exibe a tela com as informações atualizadas
-            repaint(); //Ativa esse metodo toda vez que o loop reinicia
+            if (timer >= 1000000000) {
+                globalFPS = contagemFrame;
+                System.out.println("FPS: " + globalFPS); // Exibe quantos quadros por segundo estão acontecendo no programa pelo console
+                contagemFrame = 0;
+                timer = 0;
+            }
         }
-
     }
 
     //Atualizações
     public void update() {
 
-        //Movimentação
-        if (conTec.upPress == true) {
-            playerY -= playerSpeed;
-        }
-        else if (conTec.downPress == true) {
-            playerY += playerSpeed;
-        }
-        else if (conTec.leftPress == true) {
-            playerX -= playerSpeed;
-        }
-        else if (conTec.rightPress == true) {
-            playerX += playerSpeed;
-        }
+        player.update(); // Método "update" presente na classe "Player"
 
     }
 
@@ -81,9 +94,8 @@ public class PainelJogo extends JPanel implements Runnable {
         //A classe Graphics2D estende a classe Graphics fornecendo melhor controle de geometria, transformações de coordenadas, gerenciamento de cores e layout de texto.
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.setColor(Color.blue); //Define a cor dos objetos exibidos
+        player.render(g2d); // Método "render" presente na classe "Player"
 
-        g2d.fillRect(playerX, playerY, tamanhoTile, tamanhoTile);
         g2d.dispose(); //Descarta as informações gráficas e libera quaisquer recursos do sistema que ele esteja usando, economizando memória
 
     }

@@ -1,7 +1,9 @@
+package main;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class controleTeclado implements KeyListener {
+public class ControleTeclado implements KeyListener {
     //O KeyListener registra o pressionamento de alguma tecla do teclado e pode ser usado para tomar ações a partir disso
 
     public boolean upPress, downPress, leftPress, rightPress;
@@ -46,7 +48,5 @@ public class controleTeclado implements KeyListener {
         if (key == KeyEvent.VK_D) {
             rightPress = false;
         }
-
-
     }
 }
