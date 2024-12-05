@@ -26,7 +26,7 @@ public class Player extends Entidade {
     public void valoresIniciais() {
         x = 100;
         y = 100;
-        speed = 4;
+        speed = 3;
         direcao = "down";
     }
 
@@ -94,7 +94,7 @@ public class Player extends Entidade {
             }
 
             contaSprite++;
-            if (contaSprite > 8) { // Troca de sprites com base no tempo de update do jogo
+            if (contaSprite > 6) { // Troca de sprites com base no tempo de update do jogo
                 if (numeroSprite == 1) {
                     numeroSprite = 2;
                 }

@@ -1,6 +1,7 @@
 package main;
 
 import entidade.Player;
+import tile.GerenciadorTile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,23 +15,19 @@ public class PainelJogo extends JPanel implements Runnable {
     final int escala = 3; //Multiplicador da escala para exibição em maiores resoluções
 
     public final int tamanhoTile = tamanhoOrgTile * escala; //Cálculo real do tamanho dos elementos na tela, no caso atual 48x48 px
-    final int maxColTela = 16; //Número de colunas exibidas na tela
-    final int maxLinTela = 12; //Número de linhas exibidas na tela
-    final int larguraTela = tamanhoTile * maxColTela; //Define a largura da tela com base nos tamanhos anteriormente definidos (768 px)
-    final int alturaTela = tamanhoTile * maxLinTela; //Define a altura da tela com base nos tamanhos anteriormente definidos (576 px)
+    public final int maxColTela = 16; //Número de colunas exibidas na tela
+    public final int maxFilTela = 12; //Número de linhas exibidas na tela
+    public final int larguraTela = tamanhoTile * maxColTela; //Define a largura da tela com base nos tamanhos anteriormente definidos (768 px)
+    public final int alturaTela = tamanhoTile * maxFilTela; //Define a altura da tela com base nos tamanhos anteriormente definidos (576 px)
 
     // FPS
     int FPS = 60;
     public static int globalFPS;
 
+    GerenciadorTile tileG = new GerenciadorTile(this);
     ControleTeclado conTec = new ControleTeclado();
     Thread threadJogo; //Pode ser iniciado e parado, mas fica ativo até que seja ordenado a parar
     Player player = new Player(this,conTec);
-
-    //Definições iniciais do jogador
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
 
     public PainelJogo() {
 
@@ -93,6 +90,8 @@ public class PainelJogo extends JPanel implements Runnable {
 
         //A classe Graphics2D estende a classe Graphics fornecendo melhor controle de geometria, transformações de coordenadas, gerenciamento de cores e layout de texto.
         Graphics2D g2d = (Graphics2D) g;
+
+        tileG.render(g2d); // Método "render" presente na classe "GerenciadorTile"
 
         player.render(g2d); // Método "render" presente na classe "Player"
 
