@@ -52,6 +52,7 @@ public class GerenciadorTile {
 
             tile[6] = new Tile();
             tile[6].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/stone_1.png")));
+            tile[6].colisao = true;
 
             // Árvore grande
 

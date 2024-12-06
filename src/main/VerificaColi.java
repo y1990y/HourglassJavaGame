@@ -11,7 +11,7 @@ public class VerificaColi {
     }
 
     public void verificaTile(Entidade entidade) {
-
+        // Variáveis usadas para a detecção de colisão
         int entidadeMundoXEsquerdo = entidade.mundoX + entidade.areaSolida.x;
         int entidadeMundoXDireito = entidade.mundoX + entidade.areaSolida.x + entidade.areaSolida.width;
         int entidadeMundoYCima = entidade.mundoY + entidade.areaSolida.y;
@@ -23,6 +23,8 @@ public class VerificaColi {
         int entidadeFilBaixo = entidadeMundoYBaixo/pj.tamanhoTile;
 
         int numTile1, numTile2;
+
+        // Detecção de colisão para cada direção
 
         switch (entidade.direcao) {
             case "up":

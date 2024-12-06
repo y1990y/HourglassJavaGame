@@ -1,6 +1,7 @@
 package main;
 
 import entidade.Player;
+import objeto.PrincipalObjeto;
 import tile.GerenciadorTile;
 
 import javax.swing.*;
@@ -35,7 +36,9 @@ public class PainelJogo extends JPanel implements Runnable {
     ControleTeclado conTec = new ControleTeclado();
     Thread threadJogo; //Pode ser iniciado e parado, mas fica ativo até que seja ordenado a parar
     public VerificaColi vColi = new VerificaColi(this);
+    public DefinidorAsset aDef = new DefinidorAsset(this);
     public Player player = new Player(this,conTec);
+    public PrincipalObjeto obj[] = new  PrincipalObjeto[10];
 
     public PainelJogo() {
 
@@ -44,6 +47,10 @@ public class PainelJogo extends JPanel implements Runnable {
         this.setDoubleBuffered(true); //Faz com que a renderização tenha um desempenho melhor
         this.addKeyListener(conTec); //Faz com que o programa consiga reconhecer os inputs de teclas
         this.setFocusable(true); //Permite que o painel do jogo possa ser focado para receber os inputs do teclado
+    }
+
+    public void setupJogo() {
+        aDef.defineObjeto();
     }
 
 
@@ -99,9 +106,17 @@ public class PainelJogo extends JPanel implements Runnable {
         //A classe Graphics2D estende a classe Graphics fornecendo melhor controle de geometria, transformações de coordenadas, gerenciamento de cores e layout de texto.
         Graphics2D g2d = (Graphics2D) g;
 
+        // Tile render
         tileG.render(g2d); // Método "render" presente na classe "GerenciadorTile"
 
+        // Player render
         player.render(g2d); // Método "render" presente na classe "Player"
+        // Object render
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) { // Evita o erro 'NullPointer'
+                obj[i].render(g2d,this);
+            }
+        }
 
         g2d.dispose(); //Descarta as informações gráficas e libera quaisquer recursos do sistema que ele esteja usando, economizando memória
 

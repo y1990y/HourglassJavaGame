@@ -26,9 +26,9 @@ public class Player extends Entidade {
         telaY = pj.alturaTela/2;
 
         areaSolida = new Rectangle();
-        areaSolida.x = 8;
+        areaSolida.x = 15;
         areaSolida.y = 16;
-        areaSolida.width = 32;
+        areaSolida.width = 25;
         areaSolida.height = 32;
 
         valoresIniciais();
