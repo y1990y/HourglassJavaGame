@@ -7,7 +7,7 @@ public class Main {
 
         JFrame janela = new JFrame(); //Criação da janela
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Permite que a janela feche de forma adequada quando o usuário aperta o botão "X" da janela
-        janela.setResizable(false); //Definindo que a janela não possa ser redimensionada
+        janela.setResizable(true); //Definindo que a janela não possa ser redimensionada
         janela.setTitle("Teste Jogo 2D"); //Nome da janela do jogo
 
         PainelJogo painelJogo = new PainelJogo(); //Inicia o painel do jogo
@@ -19,6 +19,5 @@ public class Main {
         janela.setVisible(true); //Faz com que seja possível ver a janela
 
         painelJogo.startThreadJogo();
-
     }
 }

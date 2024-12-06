@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 public class ControleTeclado implements KeyListener {
     //O KeyListener registra o pressionamento de alguma tecla do teclado e pode ser usado para tomar ações a partir disso
 
-    public boolean upPress, downPress, leftPress, rightPress;
+    public boolean upPress, downPress, leftPress, rightPress, shiftPress;
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -28,6 +28,9 @@ public class ControleTeclado implements KeyListener {
         if (key == KeyEvent.VK_D) {
             rightPress = true;
         }
+        if (key == KeyEvent.VK_SHIFT) {
+            shiftPress = true;
+        }
 
     }
 
@@ -47,6 +50,9 @@ public class ControleTeclado implements KeyListener {
         }
         if (key == KeyEvent.VK_D) {
             rightPress = false;
+        }
+        if (key == KeyEvent.VK_SHIFT) {
+            shiftPress = false;
         }
     }
 }

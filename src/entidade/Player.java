@@ -15,18 +15,33 @@ public class Player extends Entidade {
     PainelJogo pj;
     ControleTeclado conTec;
 
+    public final int telaX;
+    public final int telaY;
+
     public Player(PainelJogo pj, ControleTeclado conTec) {
         this.pj = pj;
         this.conTec = conTec;
+
+        telaX = pj.larguraTela/2;
+        telaY = pj.alturaTela/2;
+
+        areaSolida = new Rectangle();
+        areaSolida.x = 8;
+        areaSolida.y = 16;
+        areaSolida.width = 32;
+        areaSolida.height = 32;
 
         valoresIniciais();
         loadPlayerSprite();
     }
 
     public void valoresIniciais() {
-        x = 100;
-        y = 100;
+        // Posições iniciais
+        mundoX = pj.tamanhoTile * 24; // Define a posição horizontal do jogador na tela
+        mundoY = pj.tamanhoTile * 20; // Define a posição vertical do jogador na tela
+        // Velocidade e direção inicial
         speed = 3;
+        trocaSpriteVel = 6;
         direcao = "down";
     }
 
@@ -78,23 +93,49 @@ public class Player extends Entidade {
 
             if (conTec.upPress == true) {
                 direcao = "up";
-                y -= speed;
             }
             else if (conTec.downPress == true) {
                 direcao = "down";
-                y += speed;
             }
             else if (conTec.leftPress == true) {
                 direcao = "left";
-                x -= speed;
             }
             else if (conTec.rightPress == true) {
                 direcao = "right";
-                x += speed;
+            }
+            if (conTec.shiftPress == true) {
+                speed = 6;
+                trocaSpriteVel = 3;
+            } else {
+                speed = 3;
+                trocaSpriteVel = 6;
+            }
+
+            // Verifica a colisão com tiles
+            colisaoAtiva = false;
+            pj.vColi.verificaTile(this);
+
+            // Se a colisão não acontece, o player consegue se mover
+            if (colisaoAtiva == false) {
+
+                switch (direcao) {
+                    case "up":
+                        mundoY -= speed;
+                        break;
+                    case "down":
+                        mundoY += speed;
+                        break;
+                    case "left":
+                        mundoX -= speed;
+                        break;
+                    case "right":
+                        mundoX += speed;
+                        break;
+                }
             }
 
             contaSprite++;
-            if (contaSprite > 6) { // Troca de sprites com base no tempo de update do jogo
+            if (contaSprite > trocaSpriteVel) { // Troca de sprites com base no tempo de update do jogo
                 if (numeroSprite == 1) {
                     numeroSprite = 2;
                 }
@@ -233,6 +274,6 @@ public class Player extends Entidade {
                 }
                 break;
         }
-        g2d.drawImage(imagem, x, y, pj.tamanhoTile, pj.tamanhoTile, null);
+        g2d.drawImage(imagem, telaX, telaY, pj.tamanhoTile, pj.tamanhoTile, null);
     }
 }

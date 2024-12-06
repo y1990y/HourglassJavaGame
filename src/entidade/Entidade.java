@@ -1,12 +1,13 @@
 package entidade;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public class Entidade {
     // Essa classe armazena todas as variáveis de entidades presentes no jogo
 
-    public int x, y;
-    public int speed;
+    public int mundoX, mundoY;
+    public int speed, trocaSpriteVel;
 
     public BufferedImage
             down_1, down_2, down_3, down_4, down_5, down_6, down_7, down_8,
@@ -17,4 +18,7 @@ public class Entidade {
 
     public int contaSprite = 0;
     public int numeroSprite = 1;
+
+    public Rectangle areaSolida;
+    public boolean colisaoAtiva = false;
 }

@@ -20,6 +20,13 @@ public class PainelJogo extends JPanel implements Runnable {
     public final int larguraTela = tamanhoTile * maxColTela; //Define a largura da tela com base nos tamanhos anteriormente definidos (768 px)
     public final int alturaTela = tamanhoTile * maxFilTela; //Define a altura da tela com base nos tamanhos anteriormente definidos (576 px)
 
+    // Configurações do Mundo
+
+    public final int maxColMundo = 50;
+    public final int maxFilMundo = 40;
+    public final int larguraMundo = tamanhoTile * maxColMundo;
+    public final int alturaMundo = tamanhoTile * maxFilMundo;
+
     // FPS
     int FPS = 60;
     public static int globalFPS;
@@ -27,7 +34,8 @@ public class PainelJogo extends JPanel implements Runnable {
     GerenciadorTile tileG = new GerenciadorTile(this);
     ControleTeclado conTec = new ControleTeclado();
     Thread threadJogo; //Pode ser iniciado e parado, mas fica ativo até que seja ordenado a parar
-    Player player = new Player(this,conTec);
+    public VerificaColi vColi = new VerificaColi(this);
+    public Player player = new Player(this,conTec);
 
     public PainelJogo() {
 
