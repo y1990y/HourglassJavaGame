@@ -57,28 +57,12 @@ public class GerenciadorTile {
             // Árvore grande
 
             tile[7] = new Tile();
-            tile[7].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/tree_1.png")));
+            tile[7].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/tree_5.png")));
             tile[7].colisao = true;
 
             tile[8] = new Tile();
-            tile[8].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/tree_2.png")));
+            tile[8].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/tree_6.png")));
             tile[8].colisao = true;
-
-            tile[9] = new Tile();
-            tile[9].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/tree_3.png")));
-            tile[9].colisao = true;
-
-            tile[10] = new Tile();
-            tile[10].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/tree_4.png")));
-            tile[10].colisao = true;
-
-            tile[11] = new Tile();
-            tile[11].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/tree_5.png")));
-            tile[11].colisao = true;
-
-            tile[12] = new Tile();
-            tile[12].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tile/tree_6.png")));
-            tile[12].colisao = true;
 
         } catch (IOException e) {
             e.printStackTrace();

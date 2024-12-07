@@ -2,6 +2,7 @@ package main;
 
 import entidade.Player;
 import objeto.PrincipalObjeto;
+import sobreposicao.PrincipalSobr;
 import tile.GerenciadorTile;
 
 import javax.swing.*;
@@ -39,6 +40,7 @@ public class PainelJogo extends JPanel implements Runnable {
     public DefinidorAsset aDef = new DefinidorAsset(this);
     public Player player = new Player(this,conTec);
     public PrincipalObjeto obj[] = new  PrincipalObjeto[10];
+    public PrincipalSobr sbr[] = new PrincipalSobr[20];
 
     public PainelJogo() {
 
@@ -51,6 +53,7 @@ public class PainelJogo extends JPanel implements Runnable {
 
     public void setupJogo() {
         aDef.defineObjeto();
+        aDef.defineSbr();
     }
 
 
@@ -109,14 +112,23 @@ public class PainelJogo extends JPanel implements Runnable {
         // Tile render
         tileG.render(g2d); // Método "render" presente na classe "GerenciadorTile"
 
-        // Player render
-        player.render(g2d); // Método "render" presente na classe "Player"
-        // Object render
+        // Objeto render
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) { // Evita o erro 'NullPointer'
                 obj[i].render(g2d,this);
             }
         }
+
+        // Jogador render
+        player.render(g2d); // Método "render" presente na classe "Player"
+
+        // Sobreposição render
+        for (int i = 0; i < sbr.length; i++) {
+            if (sbr[i] != null) { // Evita o erro 'NullPointer'
+                sbr[i].render(g2d,this);
+            }
+        }
+
 
         g2d.dispose(); //Descarta as informações gráficas e libera quaisquer recursos do sistema que ele esteja usando, economizando memória
 
