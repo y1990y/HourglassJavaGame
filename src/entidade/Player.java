@@ -17,6 +17,7 @@ public class Player extends Entidade {
 
     public final int telaX;
     public final int telaY;
+    int temChave = 0;
 
     public Player(PainelJogo pj, ControleTeclado conTec) {
         this.pj = pj;
@@ -28,6 +29,8 @@ public class Player extends Entidade {
         areaSolida = new Rectangle();
         areaSolida.x = 15;
         areaSolida.y = 16;
+        areaSolidaPadraoX = areaSolida.x;
+        areaSolidaPadraoY = areaSolida.y;
         areaSolida.width = 25;
         areaSolida.height = 32;
 
@@ -115,6 +118,10 @@ public class Player extends Entidade {
             colisaoAtiva = false;
             pj.vColi.verificaTile(this);
 
+            // Verifica a colisão com objetos
+            int objIndex = pj.vColi.verificaObjeto(this, true);
+            coletaObjeto(objIndex);
+
             // Se a colisão não acontece, o player consegue se mover
             if (colisaoAtiva == false) {
 
@@ -164,6 +171,33 @@ public class Player extends Entidade {
             }
         }
     }
+
+    public void coletaObjeto(int i) {
+
+        if (i != 999) {
+
+            String nomeObjeto = pj.obj[i].nome;
+
+            switch (nomeObjeto) {
+                case "Chave":
+                    temChave++;
+                    pj.obj[i] = null;
+                    System.out.println("Chaves: " + temChave);
+                    break;
+                case "Porta":
+                    if(temChave > 0) {
+                        pj.obj[i] = null;
+                        temChave--;
+                    }
+                    System.out.println("Chaves: " + temChave);
+                    break;
+
+            }
+
+        }
+
+    }
+
     public void render(Graphics g2d) {
 
         BufferedImage imagem = null;

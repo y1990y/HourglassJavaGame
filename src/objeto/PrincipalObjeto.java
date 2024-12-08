@@ -11,6 +11,9 @@ public class PrincipalObjeto {
     public String nome;
     public boolean colisao = false;
     public int mundoX, mundoY;
+    public Rectangle areaSolida = new Rectangle(0, 0, 48, 48);
+    public int areaSolidaPadraoX = 0;
+    public int areaSolidaPadraoY = 0;
 
     public void render(Graphics2D g2d, PainelJogo pj) {
 

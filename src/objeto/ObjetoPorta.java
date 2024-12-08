@@ -16,5 +16,6 @@ public class ObjetoPorta extends PrincipalObjeto{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            colisao = true;
         }
 }

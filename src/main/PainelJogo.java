@@ -88,7 +88,7 @@ public class PainelJogo extends JPanel implements Runnable {
 
             if (timer >= 1000000000) {
                 globalFPS = contagemFrame;
-                System.out.println("FPS: " + globalFPS); // Exibe quantos quadros por segundo estão acontecendo no programa pelo console
+//                System.out.println("FPS: " + globalFPS); // Exibe quantos quadros por segundo estão acontecendo no programa pelo console
                 contagemFrame = 0;
                 timer = 0;
             }
