@@ -2,6 +2,7 @@ package entidade;
 
 import main.ControleTeclado;
 import main.PainelJogo;
+import objeto.ObjetoPorta;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,6 +15,7 @@ public class Player extends Entidade {
 
     PainelJogo pj;
     ControleTeclado conTec;
+    ObjetoPorta objPorta;
 
     public final int telaX;
     public final int telaY;
@@ -21,6 +23,7 @@ public class Player extends Entidade {
     // Verifica os itens que o jogador coletou
     int temChave = 0;
     public int temRaio = 0;
+    public int tempoPoder = 0;
 
     public Player(PainelJogo pj, ControleTeclado conTec) {
         this.pj = pj;
@@ -184,6 +187,14 @@ public class Player extends Entidade {
                 contaSprite = 0;
             }
         }
+
+        if (temRaio > 0) {
+            tempoPoder++;
+        }
+
+        if (tempoPoder >= 500) {  // Tempo ativo do poder
+            temRaio--;
+        }
     }
 
     public void coletaObjeto(int i) {
@@ -202,7 +213,13 @@ public class Player extends Entidade {
                 case "Porta":
                     if(temChave > 0) {
                         pj.tocaSFX(2);
-                        pj.obj[i] = null;
+                        try {
+                            pj.obj[i].imagem = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/objetos/door_2.png")));
+                            pj.obj[i].colisao = false;
+                            pj.obj[i].nome = "PortaAberta";
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         temChave--;
                     }
                     System.out.println("Chaves: " + temChave);
