@@ -3,6 +3,7 @@ package main;
 import objeto.ObjetoBau;
 import objeto.ObjetoChave;
 import objeto.ObjetoPorta;
+import objeto.ObjetoRaio;
 import sobreposicao.SbrTree1;
 import sobreposicao.SbrTree2;
 import sobreposicao.SbrTree3;
@@ -33,6 +34,10 @@ public class DefinidorAsset {
         pj.obj[3] = new ObjetoBau();
         pj.obj[3].mundoX = 27 * pj.tamanhoTile;
         pj.obj[3].mundoY = 25 * pj.tamanhoTile;
+
+        pj.obj[4] = new ObjetoRaio();
+        pj.obj[4].mundoX = 30 * pj.tamanhoTile;
+        pj.obj[4].mundoY = 28 * pj.tamanhoTile;
     }
 
     public void defineSbr() {

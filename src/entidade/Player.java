@@ -17,7 +17,10 @@ public class Player extends Entidade {
 
     public final int telaX;
     public final int telaY;
+
+    // Verifica os itens que o jogador coletou
     int temChave = 0;
+    public int temRaio = 0;
 
     public Player(PainelJogo pj, ControleTeclado conTec) {
         this.pj = pj;
@@ -106,12 +109,23 @@ public class Player extends Entidade {
             else if (conTec.rightPress == true) {
                 direcao = "right";
             }
-            if (conTec.shiftPress == true) {
+
+            // Velocidades com o botão de corrida ativo e inativo sem power up de velocidade
+            if (conTec.shiftPress == true && temRaio < 1) {
                 speed = 6;
                 trocaSpriteVel = 3;
-            } else {
+            } else if (conTec.shiftPress == false && temRaio < 1) {
                 speed = 3;
                 trocaSpriteVel = 6;
+            }
+
+            // Velocidades com o botão de corrida ativo e inativo com power up de velocidade
+            if (conTec.shiftPress == true && temRaio > 0) {
+                speed = 8;
+                trocaSpriteVel = 2;
+            } else if (conTec.shiftPress == false && temRaio > 0) {
+                speed = 6;
+                trocaSpriteVel = 3;
             }
 
             // Verifica a colisão com tiles
@@ -190,6 +204,11 @@ public class Player extends Entidade {
                         temChave--;
                     }
                     System.out.println("Chaves: " + temChave);
+                    break;
+                case "Raio":
+                    temRaio++;
+                    System.out.println(speed);
+                    pj.obj[i] = null;
                     break;
 
             }

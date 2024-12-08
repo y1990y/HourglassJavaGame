@@ -7,7 +7,7 @@ public class Entidade {
     // Essa classe armazena todas as variáveis de entidades presentes no jogo
 
     public int mundoX, mundoY;
-    public int speed, trocaSpriteVel;
+    public int speed,trocaSpriteVel;
 
     public BufferedImage
             down_1, down_2, down_3, down_4, down_5, down_6, down_7, down_8,
