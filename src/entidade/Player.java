@@ -194,27 +194,26 @@ public class Player extends Entidade {
 
             switch (nomeObjeto) {
                 case "Chave":
+                    pj.tocaSFX(1);
                     temChave++;
                     pj.obj[i] = null;
                     System.out.println("Chaves: " + temChave);
                     break;
                 case "Porta":
                     if(temChave > 0) {
+                        pj.tocaSFX(2);
                         pj.obj[i] = null;
                         temChave--;
                     }
                     System.out.println("Chaves: " + temChave);
                     break;
                 case "Raio":
+                    pj.tocaSFX(3);
                     temRaio++;
-                    System.out.println(speed);
                     pj.obj[i] = null;
                     break;
-
             }
-
         }
-
     }
 
     public void render(Graphics g2d) {

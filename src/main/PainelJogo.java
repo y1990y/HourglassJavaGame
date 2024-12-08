@@ -26,18 +26,20 @@ public class PainelJogo extends JPanel implements Runnable {
 
     public final int maxColMundo = 50;
     public final int maxFilMundo = 40;
-    public final int larguraMundo = tamanhoTile * maxColMundo;
-    public final int alturaMundo = tamanhoTile * maxFilMundo;
 
     // FPS
     int FPS = 60;
     public static int globalFPS;
 
+    // Sistema
     GerenciadorTile tileG = new GerenciadorTile(this);
     ControleTeclado conTec = new ControleTeclado();
     Thread threadJogo; //Pode ser iniciado e parado, mas fica ativo até que seja ordenado a parar
     public VerificaColi vColi = new VerificaColi(this);
     public DefinidorAsset aDef = new DefinidorAsset(this);
+    Som som = new Som();
+
+    // Entidades, objetos e sobreposições
     public Player player = new Player(this,conTec);
     public PrincipalObjeto obj[] = new  PrincipalObjeto[10];
     public PrincipalSobr sbr[] = new PrincipalSobr[20];
@@ -54,6 +56,8 @@ public class PainelJogo extends JPanel implements Runnable {
     public void setupJogo() {
         aDef.defineObjeto();
         aDef.defineSbr();
+
+        tocaMusica(0);
     }
 
 
@@ -129,8 +133,22 @@ public class PainelJogo extends JPanel implements Runnable {
             }
         }
 
-
         g2d.dispose(); //Descarta as informações gráficas e libera quaisquer recursos do sistema que ele esteja usando, economizando memória
+    }
 
+    public void tocaMusica(int i) {
+        som.defineArquivo(i);
+        som.playMusica();
+        som.loop();
+    }
+
+    public void paraMusica() {
+        som.stop();
+    }
+
+    public void tocaSFX(int i) {
+
+        som.defineArquivo(i);
+        som.playSFX();
     }
 }

@@ -15,5 +15,6 @@ public class ObjetoBau extends PrincipalObjeto{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        colisao = true;
     }
 }
