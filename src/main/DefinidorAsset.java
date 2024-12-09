@@ -32,12 +32,36 @@ public class DefinidorAsset {
         pj.obj[2].mundoY = 19 * pj.tamanhoTile;
 
         pj.obj[3] = new ObjetoBau();
-        pj.obj[3].mundoX = 27 * pj.tamanhoTile;
-        pj.obj[3].mundoY = 25 * pj.tamanhoTile;
+        pj.obj[3].mundoX = 11 * pj.tamanhoTile;
+        pj.obj[3].mundoY = 13 * pj.tamanhoTile;
 
-        pj.obj[4] = new ObjetoRaio();
-        pj.obj[4].mundoX = 30 * pj.tamanhoTile;
-        pj.obj[4].mundoY = 28 * pj.tamanhoTile;
+        pj.obj[4] = new ObjetoChave();
+        pj.obj[4].mundoX = 10 * pj.tamanhoTile;
+        pj.obj[4].mundoY = 13 * pj.tamanhoTile;
+
+        pj.obj[5] = new ObjetoChave();
+        pj.obj[5].mundoX = 12 * pj.tamanhoTile;
+        pj.obj[5].mundoY = 13 * pj.tamanhoTile;
+
+        pj.obj[6] = new ObjetoPorta();
+        pj.obj[6].mundoX = 11 * pj.tamanhoTile;
+        pj.obj[6].mundoY = 16 * pj.tamanhoTile;
+
+        pj.obj[7] = new ObjetoPorta();
+        pj.obj[7].mundoX = 20 * pj.tamanhoTile;
+        pj.obj[7].mundoY = 13 * pj.tamanhoTile;
+
+        pj.obj[8] = new ObjetoPorta();
+        pj.obj[8].mundoX = 20 * pj.tamanhoTile;
+        pj.obj[8].mundoY = 11 * pj.tamanhoTile;
+
+        pj.obj[9] = new ObjetoChave();
+        pj.obj[9].mundoX = 12 * pj.tamanhoTile;
+        pj.obj[9].mundoY = 22 * pj.tamanhoTile;
+
+        pj.obj[10] = new ObjetoRaio();
+        pj.obj[10].mundoX = 20 * pj.tamanhoTile;
+        pj.obj[10].mundoY = 9 * pj.tamanhoTile;
     }
 
     public void defineSbr() {
@@ -130,6 +154,5 @@ public class DefinidorAsset {
         pj.sbr[19] = new SbrTree4();
         pj.sbr[19].mundoX = 16 * pj.tamanhoTile;
         pj.sbr[19].mundoY = 9 * pj.tamanhoTile;
-
     }
 }

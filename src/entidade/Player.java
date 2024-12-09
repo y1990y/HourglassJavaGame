@@ -15,7 +15,6 @@ public class Player extends Entidade {
 
     PainelJogo pj;
     ControleTeclado conTec;
-    ObjetoPorta objPorta;
 
     public final int telaX;
     public final int telaY;
@@ -41,7 +40,7 @@ public class Player extends Entidade {
         areaSolida.height = 32;
 
         valoresIniciais();
-        loadPlayerSprite();
+        carregaSpritePlayer();
     }
 
     public void valoresIniciais() {
@@ -54,7 +53,7 @@ public class Player extends Entidade {
         direcao = "down";
     }
 
-    public void loadPlayerSprite() {
+    public void carregaSpritePlayer() {
         try {
             down_1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/down_1.png")));
             down_2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/down_2.png")));

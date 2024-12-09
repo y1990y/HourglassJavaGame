@@ -10,8 +10,7 @@ import java.awt.*;
 
 public class PainelJogo extends JPanel implements Runnable {
     //O termo "extends" faz com que a classe herde todos os comportamentos da classe JPanel, sendo assim uma subclasse da classe JPanel
-    //Implementar o Runnable à classe é o que permite o uso da Thread
-
+    //Implementar o Runnable à classe é o que permite o uso do método 'run()'
     //Configurações da tela
     final int tamanhoOrgTile = 16; //O jogo estará utilizando um tile map de 16x16 px
     final int escala = 3; //Multiplicador da escala para exibição em maiores resoluções
@@ -41,7 +40,7 @@ public class PainelJogo extends JPanel implements Runnable {
 
     // Entidades, objetos e sobreposições
     public Player player = new Player(this,conTec);
-    public PrincipalObjeto obj[] = new  PrincipalObjeto[10];
+    public PrincipalObjeto obj[] = new  PrincipalObjeto[15];
     public PrincipalSobr sbr[] = new PrincipalSobr[20];
 
     public PainelJogo() {

@@ -22,7 +22,7 @@ public class GerenciadorTile {
         numTileMapa = new int[pj.maxColMundo][pj.maxFilMundo];
 
         imagemTile();
-        carregarMapa("/mapas/mapa02.txt"); // Caminho do mapa utilizado pelo metodo, evitando a criação de um novo metodo
+        carregarMapa("/mapas/mapa03.txt"); // Caminho do mapa utilizado pelo metodo, evitando a criação de um novo metodo
     }
 
     public void imagemTile() {
