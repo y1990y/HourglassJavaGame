@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 
-public class Player extends Entidade {
+public final class Player extends Entidade {
 
     PainelJogo pj;
     ControleTeclado conTec;

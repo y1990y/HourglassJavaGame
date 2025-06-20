@@ -4,7 +4,7 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.util.Objects;
 
-public class ObjetoRaio extends PrincipalObjeto{
+public final class ObjetoRaio extends PrincipalObjeto{
     public ObjetoRaio(){
 
         nome = "Raio";

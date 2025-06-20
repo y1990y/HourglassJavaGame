@@ -5,7 +5,7 @@ import main.PainelJogo;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class PrincipalObjeto {
+public abstract class PrincipalObjeto {
 
     public BufferedImage imagem;
     public String nome;
