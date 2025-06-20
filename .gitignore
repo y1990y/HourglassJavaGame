@@ -28,3 +28,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+
+### Custom ###
+/src/banco/InfoConexao.java
