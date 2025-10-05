@@ -207,7 +207,7 @@ public final class Player extends Entidade {
                     pj.tocaSFX(1);
                     temChave++;
                     pj.obj[i] = null;
-                    System.out.println("Chaves: " + temChave);
+                    pj.ui.exibeMensagem("Você coletou uma chave!");
                     break;
                 case "Porta":
                     if(temChave > 0) {
