@@ -36,7 +36,9 @@ public class PainelJogo extends JPanel implements Runnable {
     Thread threadJogo; //Pode ser iniciado e parado, mas fica ativo até que seja ordenado a parar
     public VerificaColi vColi = new VerificaColi(this);
     public DefinidorAsset aDef = new DefinidorAsset(this);
+    Som musica = new Som();
     Som som = new Som();
+    public UI ui = new UI(this);
 
     // Entidades, objetos e sobreposições
     public Player player = new Player(this,conTec);
@@ -132,17 +134,20 @@ public class PainelJogo extends JPanel implements Runnable {
             }
         }
 
+        //UI
+        ui.draw(g2d);
+
         g2d.dispose(); //Descarta as informações gráficas e libera quaisquer recursos do sistema que ele esteja usando, economizando memória
     }
 
     public void tocaMusica(int i) {
-        som.defineArquivo(i);
-        som.playMusica();
-        som.loop();
+        musica.defineArquivo(i);
+        musica.playMusica();
+        musica.loop();
     }
 
     public void paraMusica() {
-        som.stop();
+        musica.stop();
     }
 
     public void tocaSFX(int i) {

@@ -20,7 +20,7 @@ public final class Player extends Entidade {
     public final int telaY;
 
     // Verifica os itens que o jogador coletou
-    int temChave = 0;
+    public int temChave = 0;
     public int temRaio = 0;
     public int tempoPoder = 0;
 
