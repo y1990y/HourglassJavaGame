@@ -64,7 +64,6 @@ public class PainelJogo extends JPanel implements Runnable {
     System.out.println("Insira o id do jogador: ");
     int jogadorId = scanner.nextInt();
 
-    // Agora sim cria o player
     this.player = new Player(this, conTec, jogadorId);
 
     System.out.println("Jogador selecionado: " + jogadorId);
