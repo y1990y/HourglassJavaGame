@@ -30,14 +30,23 @@ CREATE TABLE item
     descricao NVARCHAR(255)
 );
 
-CREATE TABLE inventario
+-- CREATE TABLE inventario
+-- (
+--     id         INT IDENTITY(1,1) PRIMARY KEY,
+--     jogador_id INT NOT NULL,
+--     item_id    INT NOT NULL,
+--     quantidade INT DEFAULT 1,
+--     FOREIGN KEY (jogador_id) REFERENCES jogador (id),
+--     FOREIGN KEY (item_id) REFERENCES item (id)
+-- );
+
+CREATE TABLE inventario_jogador
 (
-    id         INT IDENTITY(1,1) PRIMARY KEY,
-    jogador_id INT NOT NULL,
-    item_id    INT NOT NULL,
-    quantidade INT DEFAULT 1,
-    FOREIGN KEY (jogador_id) REFERENCES jogador (id),
-    FOREIGN KEY (item_id) REFERENCES item (id)
+    jogador_id					INT PRIMARY KEY,
+    qtd_chaves					INT DEFAULT 0,
+    qtd_buffs_coletados			INT DEFAULT 0,
+    ultima_atualizacao			DATETIME2 DEFAULT SYSDATETIME(),
+    FOREIGN KEY (jogador_id)	REFERENCES jogador(id)
 );
 
 CREATE TABLE mapa_estado

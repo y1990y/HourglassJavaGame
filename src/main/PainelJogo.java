@@ -4,9 +4,11 @@ import entidade.Player;
 import objeto.PrincipalObjeto;
 import sobreposicao.PrincipalSobr;
 import tile.GerenciadorTile;
+import banco.dao.InventarioDAO;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Scanner;
 
 public class PainelJogo extends JPanel implements Runnable {
     //O termo "extends" faz com que a classe herde todos os comportamentos da classe JPanel, sendo assim uma subclasse da classe JPanel
@@ -37,11 +39,13 @@ public class PainelJogo extends JPanel implements Runnable {
     public VerificaColi vColi = new VerificaColi(this);
     public DefinidorAsset aDef = new DefinidorAsset(this);
     Som musica = new Som();
+    public boolean musicaMutada = false;
     Som som = new Som();
     public UI ui = new UI(this);
+    InventarioDAO inventarioDAO = new InventarioDAO();
 
     // Entidades, objetos e sobreposições
-    public Player player = new Player(this,conTec);
+    public Player player;
     public PrincipalObjeto obj[] = new  PrincipalObjeto[15];
     public PrincipalSobr sbr[] = new PrincipalSobr[20];
 
@@ -53,6 +57,20 @@ public class PainelJogo extends JPanel implements Runnable {
         this.addKeyListener(conTec); //Faz com que o programa consiga reconhecer os inputs de teclas
         this.setFocusable(true); //Permite que o painel do jogo possa ser focado para receber os inputs do teclado
     }
+
+    public void loginJogador() {
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.println("Insira o id do jogador: ");
+    int jogadorId = scanner.nextInt();
+
+    // Agora sim cria o player
+    this.player = new Player(this, conTec, jogadorId);
+
+    System.out.println("Jogador selecionado: " + jogadorId);
+
+    scanner.close();
+}
 
     public void setupJogo() {
         aDef.defineObjeto();
@@ -105,6 +123,20 @@ public class PainelJogo extends JPanel implements Runnable {
 
         player.update(); // Método "update" presente na classe "Player"
 
+        // Verifica estado da música (parada ou não)
+        if (conTec.mutePress) {
+            if (!musicaMutada) {
+                paraMusica();          // para a música
+                musicaMutada = true;   // estado = mutado
+                System.out.println("Música parada.");
+            } else {
+                tocaMusica(0);         // começa a tocar a música novamente
+                musicaMutada = false;  // estado = ativo
+                System.out.println("Música iniciada.");
+            }
+
+            conTec.mutePress = false; // evita repetir o comando enquanto a tecla está segurada
+        }
     }
 
     //Gráficos

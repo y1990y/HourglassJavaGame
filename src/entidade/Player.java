@@ -2,31 +2,46 @@ package entidade;
 
 import main.ControleTeclado;
 import main.PainelJogo;
-import objeto.ObjetoPorta;
 
 import javax.imageio.ImageIO;
+
+import banco.classesBD.Inventario;
+import banco.dao.InventarioDAO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
-
 
 public final class Player extends Entidade {
 
     PainelJogo pj;
     ControleTeclado conTec;
 
+    public int jogadorId;
+
+    InventarioDAO inventarioDAO = new InventarioDAO();
+    Inventario inventario = inventarioDAO.carregarInventario(jogadorId);
+
     public final int telaX;
     public final int telaY;
 
-    // Verifica os itens que o jogador coletou
-    public int temChave = 0;
-    public int temRaio = 0;
-    public int tempoPoder = 0;
+    public int temChave;
+    public int temRaio;
+    public int qtdBuffsColetados;
+    public int tempoPoder;
 
-    public Player(PainelJogo pj, ControleTeclado conTec) {
+    public Player(PainelJogo pj, ControleTeclado conTec, int jogadorId) {
+
         this.pj = pj;
         this.conTec = conTec;
+        this.jogadorId = jogadorId;
+
+        carregarInventarioDoBanco(jogadorId);
+
+        // sincroniza variáveis internas do Player
+        this.temChave = inventario.getQtdChaves();
+        this.qtdBuffsColetados = inventario.getQtdBuffsColetados();
 
         telaX = pj.larguraTela/2;
         telaY = pj.alturaTela/2;
@@ -42,6 +57,21 @@ public final class Player extends Entidade {
         valoresIniciais();
         carregaSpritePlayer();
     }
+
+    private void carregarInventarioDoBanco(int jogadorId) {
+        InventarioDAO inventarioDAO = new InventarioDAO();
+        Inventario invBD = inventarioDAO.carregarInventario(jogadorId);
+
+        if (invBD != null) {
+            this.inventario = invBD;
+            System.out.println("Inventário carregado do banco: " + inventario);
+        } else {
+            this.inventario = new Inventario();
+            this.inventario.setJogadorId(jogadorId);
+            System.out.println("Não havia inventário. Criando novo para o jogador " + jogadorId);
+        }
+    }
+
 
     public void valoresIniciais() {
         // Posições iniciais
@@ -197,6 +227,7 @@ public final class Player extends Entidade {
     }
 
     public void coletaObjeto(int i) {
+        inventario.setJogadorId(this.jogadorId);
 
         if (i != 999) {
 
@@ -206,6 +237,8 @@ public final class Player extends Entidade {
                 case "Chave":
                     pj.tocaSFX(1);
                     temChave++;
+                    inventario.setQtdChaves(inventario.getQtdChaves() + 1);
+                    inventarioDAO.salvarOuAtualizarInventario(inventario);
                     pj.obj[i] = null;
                     pj.ui.exibeMensagem("Você coletou uma chave!");
                     break;
@@ -220,12 +253,17 @@ public final class Player extends Entidade {
                             e.printStackTrace();
                         }
                         temChave--;
-                    }
-                    System.out.println("Chaves: " + temChave);
+                        inventario.setQtdChaves(inventario.getQtdChaves() - 1);
+                        inventarioDAO.salvarOuAtualizarInventario(inventario);
+                    } 
+                    //System.out.println("Chaves: " + temChave);
                     break;
                 case "Raio":
                     pj.tocaSFX(3);
                     temRaio++;
+                    qtdBuffsColetados++;
+                    inventario.setQtdBuffsColetados(inventario.getQtdBuffsColetados() + 1);
+                    inventarioDAO.salvarOuAtualizarInventario(inventario);
                     pj.obj[i] = null;
                     break;
             }
