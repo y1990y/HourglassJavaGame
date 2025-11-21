@@ -216,7 +216,7 @@ public final class Player extends Entidade {
                     temChave++;
                     inventario.setQtdChaves(temChave);
                     pj.obj[i] = null;
-                    pj.ui.exibeMensagem("Você coletou uma chave!");
+                    System.out.println("Chaves: " + temChave);
                     break;
                 case "Porta":
                     if(temChave > 0) {
