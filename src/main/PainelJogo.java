@@ -39,7 +39,6 @@ public class PainelJogo extends JPanel implements Runnable {
     public VerificaColi vColi = new VerificaColi(this);
     public DefinidorAsset aDef = new DefinidorAsset(this);
     Som musica = new Som();
-    public boolean musicaMutada = false;
     Som som = new Som();
     public UI ui = new UI(this);
     InventarioDAO inventarioDAO = new InventarioDAO();
@@ -119,23 +118,7 @@ public class PainelJogo extends JPanel implements Runnable {
 
     //Atualizações
     public void update() {
-
         player.update(); // Método "update" presente na classe "Player"
-
-        // Verifica estado da música (parada ou não)
-        if (conTec.mutePress) {
-            if (!musicaMutada) {
-                paraMusica();          // para a música
-                musicaMutada = true;   // estado = mutado
-                System.out.println("Música parada.");
-            } else {
-                tocaMusica(0);         // começa a tocar a música novamente
-                musicaMutada = false;  // estado = ativo
-                System.out.println("Música iniciada.");
-            }
-
-            conTec.mutePress = false; // evita repetir o comando enquanto a tecla está segurada
-        }
     }
 
     //Gráficos

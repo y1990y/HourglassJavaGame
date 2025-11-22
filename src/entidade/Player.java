@@ -31,6 +31,8 @@ public final class Player extends Entidade {
     public int qtdBuffsColetados;
     public int tempoPoder;
 
+    public boolean musicaMutada = false;
+
     public Player(PainelJogo pj, ControleTeclado conTec, int jogadorId) {
 
         this.pj = pj;
@@ -124,6 +126,22 @@ public final class Player extends Entidade {
     }
 
     public void update() {
+        //Som
+        // Verifica estado da música (parada ou não)
+        if (conTec.mutePress) {
+            if (!musicaMutada) {
+                pj.paraMusica();          // para a música
+                musicaMutada = true;   // estado = mutado
+                System.out.println("Música parada.");
+            } else {
+                pj.tocaMusica(0);         // começa a tocar a música novamente
+                musicaMutada = false;  // estado = ativo
+                System.out.println("Música iniciada.");
+            }
+
+            conTec.mutePress = false; // evita repetir o comando enquanto a tecla está segurada
+        }
+        
         //Movimentação
 
         // Impede a troca de sprites parado
