@@ -6,7 +6,9 @@ import main.PainelJogo;
 import javax.imageio.ImageIO;
 
 import banco.classesBD.Inventario;
+import banco.classesBD.Jogador;
 import banco.dao.InventarioDAO;
+import banco.dao.PlayerDAO;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -63,7 +65,7 @@ public final class Player extends Entidade {
         areaSolidaPadraoY = areaSolida.y;
         areaSolida.width = 25;
         areaSolida.height = 32;
-
+        
         valoresIniciais();
         carregaSpritePlayer();
     }
@@ -84,9 +86,15 @@ public final class Player extends Entidade {
 
 
     public void valoresIniciais() {
-        // Posições iniciais
-        mundoX = pj.tamanhoTile * 24; // Define a posição horizontal do jogador na tela
-        mundoY = pj.tamanhoTile * 20; // Define a posição vertical do jogador na tela
+
+        PlayerDAO dao = new PlayerDAO();
+        Jogador dados = dao.buscarJogadorPorId(jogadorId);
+
+        // Posição inicial do player no mundo
+        this.mundoX = dados.getPosicaoX();
+        this.mundoY = dados.getPosicaoY();
+        System.out.println("Posição carregada do banco!");
+        
         // Velocidade e direção inicial
         speed = 3;
         trocaSpriteVel = 6;

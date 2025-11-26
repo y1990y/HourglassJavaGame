@@ -1,8 +1,12 @@
 package main;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 
 import banco.classesBD.Jogador;
+import banco.dao.PlayerDAO;
 import banco.login.TelaLogin;
 
 public class Main {
@@ -30,5 +34,18 @@ public class Main {
 
         painelJogo.setupJogo();
         painelJogo.startThreadJogo();
+        
+        // Salva a posição do jogador ao fechar o jogo
+        janela.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                PlayerDAO dao = new PlayerDAO();
+                dao.atualizarPosicao(
+                    painelJogo.player.getJogadorId(),
+                    painelJogo.player.mundoX,
+                    painelJogo.player.mundoY
+                );
+                System.out.println("Posição salva ao sair!");
+            }
+        });
     }
 }

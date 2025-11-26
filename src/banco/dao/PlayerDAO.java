@@ -28,7 +28,7 @@ public class PlayerDAO {
 
     // Cria um jogador novo com o nome informado
     public void criarJogadorNovo(int usuarioId, String nomePersonagem) {
-        String sql = "INSERT INTO jogador (usuario_id, nome_jogador, vida, posicao_x, posicao_y) VALUES (?, ?, 100, 24, 20)";
+        String sql = "INSERT INTO jogador (usuario_id, nome_jogador) VALUES (?, ?)";
 
         try (Connection conn = new Conexao().getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -79,5 +79,22 @@ public class PlayerDAO {
         }
 
         return null;
+    }
+
+    public void atualizarPosicao(int jogadorId, int x, int y) {
+        String sql = "UPDATE jogador SET posicao_x = ?, posicao_y = ? WHERE usuario_id = ?";
+
+        try (Connection conn = new Conexao().getConexao();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, x);
+            stmt.setInt(2, y);
+            stmt.setInt(3, jogadorId);
+
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println("Erro ao atualizar posição do jogador: " + e.getMessage());
+        }
     }
 }
