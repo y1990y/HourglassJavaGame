@@ -1,33 +1,33 @@
 create database hourglass
 
 USE hourglass
-CREATE TABLE usuarios
-(
-    id         INT IDENTITY(1,1) PRIMARY KEY,
-    nome       NVARCHAR(140) NOT NULL,
-    email      NVARCHAR(255) NOT NULL UNIQUE,
-    senha      NVARCHAR(255) NOT NULL,
+
+CREATE TABLE usuarios (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    usuario VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
     created_at DATETIME2 DEFAULT SYSDATETIME(),
     updated_at DATETIME2 DEFAULT SYSDATETIME()
 );
 
 CREATE TABLE jogador
 (
-    id              INT PRIMARY KEY, -- mesmo ID da tabela usuarios
-    nome_personagem NVARCHAR(100) NOT NULL,
-    posicao_x       INT NOT NULL,
-    posicao_y       INT NOT NULL,
-    vida            INT NOT NULL,
+    usuario_id      INT PRIMARY KEY, -- mesmo ID da tabela usuarios
+    nome_jogador    VARCHAR (100) NOT NULL,
+    vida            INT DEFAULT 100,
+    posicao_x       INT DEFAULT 0,
+    posicao_y       INT DEFAULT 0,
     data_salvo      DATETIME2 DEFAULT SYSDATETIME(),
-    FOREIGN KEY (id) REFERENCES usuarios (id)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id) ON DELETE CASCADE
 );
 
-CREATE TABLE item
+CREATE TABLE inventario_jogador
 (
-    id        INT IDENTITY(1,1) PRIMARY KEY,
-    nome      NVARCHAR(100) NOT NULL,
-    tipo      NVARCHAR(50) CHECK(tipo IN ('consumivel', 'chave', 'buff')) NOT NULL,
-    descricao NVARCHAR(255)
+    jogador_id					INT PRIMARY KEY,
+    qtd_chaves					INT DEFAULT 0,
+    qtd_buffs_coletados			INT DEFAULT 0,
+    ultima_atualizacao			DATETIME2 DEFAULT SYSDATETIME(),
+    FOREIGN KEY (jogador_id)	REFERENCES jogador(usuario_id)
 );
 
 -- CREATE TABLE inventario
@@ -40,13 +40,12 @@ CREATE TABLE item
 --     FOREIGN KEY (item_id) REFERENCES item (id)
 -- );
 
-CREATE TABLE inventario_jogador
+CREATE TABLE item
 (
-    jogador_id					INT PRIMARY KEY,
-    qtd_chaves					INT DEFAULT 0,
-    qtd_buffs_coletados			INT DEFAULT 0,
-    ultima_atualizacao			DATETIME2 DEFAULT SYSDATETIME(),
-    FOREIGN KEY (jogador_id)	REFERENCES jogador(id)
+    id        INT IDENTITY(1,1) PRIMARY KEY,
+    nome      NVARCHAR(100) NOT NULL,
+    tipo      NVARCHAR(50) CHECK(tipo IN ('consumivel', 'chave', 'buff')) NOT NULL,
+    descricao NVARCHAR(255)
 );
 
 CREATE TABLE mapa_estado

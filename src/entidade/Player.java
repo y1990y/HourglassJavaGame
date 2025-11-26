@@ -33,6 +33,14 @@ public final class Player extends Entidade {
 
     public boolean musicaMutada = false;
 
+    public int getJogadorId() {
+        return jogadorId;
+    }
+
+    public void setJogadorId(int jogadorId) {
+        this.jogadorId = jogadorId;
+    }
+
     public Player(PainelJogo pj, ControleTeclado conTec, int jogadorId) {
 
         this.pj = pj;

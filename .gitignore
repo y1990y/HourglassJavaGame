@@ -31,4 +31,4 @@ bin/
 
 
 ### Custom ###
-/src/banco/InfoConexao.java
+/src/banco/conexao/InfoConexao.java

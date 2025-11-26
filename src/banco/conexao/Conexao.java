@@ -1,4 +1,4 @@
-package banco;
+package banco.conexao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

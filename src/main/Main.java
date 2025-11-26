@@ -2,12 +2,19 @@ package main;
 
 import javax.swing.JFrame;
 
+import banco.classesBD.Jogador;
+import banco.login.TelaLogin;
+
 public class Main {
     public static void main(String[] args) {
+        new TelaLogin((Jogador jogador) -> {
+            iniciarJogo(jogador);
+        });
+    }
 
-        PainelJogo painelJogo = new PainelJogo(); //Inicia o painel do jogo
+    private static void iniciarJogo(Jogador jogador) {
 
-        painelJogo.loginJogador();
+        PainelJogo painelJogo = new PainelJogo(jogador); //Inicia o painel do jogo
 
         JFrame janela = new JFrame(); //Criação da janela
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Permite que a janela feche de forma adequada quando o usuário aperta o botão "X" da janela

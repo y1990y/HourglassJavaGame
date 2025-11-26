@@ -4,11 +4,11 @@ import entidade.Player;
 import objeto.PrincipalObjeto;
 import sobreposicao.PrincipalSobr;
 import tile.GerenciadorTile;
+import banco.classesBD.Jogador;
 import banco.dao.InventarioDAO;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Scanner;
 
 public class PainelJogo extends JPanel implements Runnable {
     //O termo "extends" faz com que a classe herde todos os comportamentos da classe JPanel, sendo assim uma subclasse da classe JPanel
@@ -48,27 +48,23 @@ public class PainelJogo extends JPanel implements Runnable {
     public PrincipalObjeto obj[] = new  PrincipalObjeto[15];
     public PrincipalSobr sbr[] = new PrincipalSobr[20];
 
-    public PainelJogo() {
+    Jogador jogador;
+
+    public PainelJogo(Jogador jogador) {
 
         this.setPreferredSize(new Dimension(larguraTela, alturaTela)); //Define o tamanho dessa classe
         this.setBackground(Color.black); //Define a cor de fundo do painel para preto
         this.setDoubleBuffered(true); //Faz com que a renderização tenha um desempenho melhor
         this.addKeyListener(conTec); //Faz com que o programa consiga reconhecer os inputs de teclas
         this.setFocusable(true); //Permite que o painel do jogo possa ser focado para receber os inputs do teclado
+
+        if (jogador != null) {
+            this.player = new Player(this, conTec, jogador.getId());
+            this.jogador = jogador;
+        }
     }
 
-    public void loginJogador() {
-    Scanner scanner = new Scanner(System.in);
 
-    System.out.println("Insira o id do jogador: ");
-    int jogadorId = scanner.nextInt();
-
-    this.player = new Player(this, conTec, jogadorId);
-
-    System.out.println("Jogador selecionado: " + jogadorId);
-
-    scanner.close();
-}
 
     public void setupJogo() {
         aDef.defineObjeto();

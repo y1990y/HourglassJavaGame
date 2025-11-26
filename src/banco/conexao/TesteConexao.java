@@ -1,4 +1,4 @@
-package banco;
+package banco.conexao;
 
 public class TesteConexao {
     public static void main(String[] args) {

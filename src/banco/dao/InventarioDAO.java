@@ -1,7 +1,7 @@
 package banco.dao;
 
-import banco.Conexao;
 import banco.classesBD.Inventario;
+import banco.conexao.Conexao;
 
 import java.sql.*;
 import java.time.LocalDateTime;
