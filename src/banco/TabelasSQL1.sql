@@ -15,8 +15,8 @@ CREATE TABLE jogador
     usuario_id      INT PRIMARY KEY, -- mesmo ID da tabela usuarios
     nome_jogador    VARCHAR (100) NOT NULL,
     vida            INT DEFAULT 100,
-    posicao_x       INT DEFAULT 0,
-    posicao_y       INT DEFAULT 0,
+    posicao_x       INT DEFAULT 1152,
+    posicao_y       INT DEFAULT 960,
     data_salvo      DATETIME2 DEFAULT SYSDATETIME(),
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id) ON DELETE CASCADE
 );
