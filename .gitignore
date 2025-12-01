@@ -31,4 +31,4 @@ bin/
 
 
 ### Custom ###
-/src/banco/conexao/InfoConexao.java
+src/main/java/com/hourglass/game/src/banco/conexao/InfoConexao.java
