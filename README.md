@@ -66,9 +66,7 @@ O código fonte está disponível em:
 | Nome                  | Função                         |
 |-----------------------|--------------------------------|
 | Eduardo Risso de Mira | Desenvolvimento e documentação |
-|-----------------------|--------------------------------|
 | Giovanna Peres André  | Desenvolvimento e documentação |
-|-----------------------|--------------------------------|
 
 ## Considerações Finais
 
