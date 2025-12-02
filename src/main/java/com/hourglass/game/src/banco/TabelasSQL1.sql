@@ -18,7 +18,7 @@ CREATE TABLE jogador
     posicao_x       INT DEFAULT 1152,
     posicao_y       INT DEFAULT 960,
     data_salvo      DATETIME2 DEFAULT SYSDATETIME(),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios (id) ON DELETE CASCADE
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
 );
 
 CREATE TABLE inventario_jogador
