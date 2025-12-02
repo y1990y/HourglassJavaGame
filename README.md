@@ -19,7 +19,7 @@ Durante o processo de desenvolvimento, existe a tentativa de criar:
 ## Tecnologias Utilizadas
 
 - **Linguagem:** Java
-- **IDE:** IntelliJ IDEA
+- **IDE:** IntelliJ IDEA - Visual Studio Code
 - **Banco de Dados:** SQL Server
 - **Modelagem:** UML (Classes, Sequência, ER)
 - **Arquitetura:** Baseada em camadas (Apresentação, Aplicação, Persistência)
@@ -43,10 +43,7 @@ As principais tabelas do sistema são:
 
 - `usuarios`
 - `jogadores`
-- `item`
 - `inventario`
-- `mapa_estado`
-- `sistema_tempo`
 
 Scripts SQL encontram-se organizados na pasta `/banco`.
 
@@ -69,6 +66,9 @@ O código fonte está disponível em:
 | Nome                  | Função                         |
 |-----------------------|--------------------------------|
 | Eduardo Risso de Mira | Desenvolvimento e documentação |
+|-----------------------|--------------------------------|
+| Giovanna Peres André  | Desenvolvimento e documentação |
+|-----------------------|--------------------------------|
 
 ## Considerações Finais
 
