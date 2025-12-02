@@ -28,13 +28,22 @@ public class PlayerDAO {
 
     // Cria um jogador novo com o nome informado
     public void criarJogadorNovo(int usuarioId, String nomePersonagem) {
-        String sql = "INSERT INTO jogador (usuario_id, nome_jogador) VALUES (?, ?)";
+
+        int vidaInicial = 100;
+        int posicaoXInicial = 1152;
+        int posicaoYInicial = 960;
+        
+        String sql = "INSERT INTO jogador (usuario_id, nome_jogador, vida, posicao_x, posicao_y) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = new Conexao().getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, usuarioId);
             stmt.setString(2, nomePersonagem);
+            stmt.setInt(3, vidaInicial);
+            stmt.setInt(4, posicaoXInicial);
+            stmt.setInt(5, posicaoYInicial);
+            
             stmt.executeUpdate();
             System.out.println("Jogador criado no banco com sucesso!");
 
