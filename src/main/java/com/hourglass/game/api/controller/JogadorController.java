@@ -4,6 +4,9 @@ import com.hourglass.game.api.entity.JogadorEntity;
 import com.hourglass.game.api.service.JogadorService;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +20,12 @@ public class JogadorController {
 
     @PostMapping("/{usuarioId}")
     public ResponseEntity<?> criar(@PathVariable int usuarioId,
-                                   @RequestBody JogadorEntity body) {
+                                @RequestBody Map<String, String> body) {
 
-        try {
-            JogadorEntity jogador = jogadorService.incluir(usuarioId, body);
-            return ResponseEntity.status(HttpStatus.CREATED).body(jogador);
+        String nome = body.get("nomeJogador");
+        JogadorEntity jogador = jogadorService.incluir(usuarioId, nome);
 
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(jogador);
     }
 
     @GetMapping

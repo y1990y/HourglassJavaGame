@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "jogador")
 public class JogadorEntity {
@@ -18,11 +18,7 @@ public class JogadorEntity {
     @Column(name = "usuario_id")
     private Integer usuarioId;
 
-    @OneToOne
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private UsuarioEntity usuario;
-
-    @Column(name = "nome_jogador", nullable = false, length = 100)
+    @Column(name = "nome_jogador", nullable = false)
     private String nomeJogador;
 
     @Column(name = "vida")
@@ -38,12 +34,13 @@ public class JogadorEntity {
     private LocalDateTime dataSalvo;
 
     @PrePersist
-    public void onCreate() {
-        dataSalvo = LocalDateTime.now();
+    public void prePersist() {
+        if (dataSalvo == null)
+            dataSalvo = LocalDateTime.now();
     }
 
     @PreUpdate
-    public void onUpdate() {
+    public void preUpdate() {
         dataSalvo = LocalDateTime.now();
     }
 }

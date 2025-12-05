@@ -2,66 +2,62 @@ package com.hourglass.game.api.service;
 
 import com.hourglass.game.api.entity.JogadorEntity;
 import com.hourglass.game.api.repository.JogadorRepository;
+import com.hourglass.game.api.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class JogadorService {
 
     private final JogadorRepository jogadorRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    // Criar jogador
-    public JogadorEntity incluir(int usuarioId, JogadorEntity body) {
+    public JogadorEntity incluir(int usuarioId, String nomeJogador) {
 
         if (jogadorRepository.existsById(usuarioId)) {
             throw new RuntimeException("Jogador já existe");
         }
 
+        usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
         JogadorEntity jogador = new JogadorEntity();
         jogador.setUsuarioId(usuarioId);
-        jogador.setNomeJogador(body.getNomeJogador());
-        jogador.setVida(100);
-        jogador.setPosicaoX(1152);
-        jogador.setPosicaoY(960);
+        jogador.setNomeJogador(nomeJogador);
 
         return jogadorRepository.save(jogador);
     }
 
-
-    // Buscar jogador
     public JogadorEntity buscarPorId(int usuarioId) {
         return jogadorRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Jogador não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Jogador não encontrado."));
     }
 
-    // Atualizar jogador
-    public JogadorEntity atualizar(int usuarioId, JogadorEntity body) {
+    public JogadorEntity atualizar(int usuarioId, JogadorEntity dados) {
 
         JogadorEntity jogador = jogadorRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Jogador não encontrado"));
 
-        jogador.setNomeJogador(body.getNomeJogador());
-        jogador.setVida(body.getVida());
-        jogador.setPosicaoX(body.getPosicaoX());
-        jogador.setPosicaoY(body.getPosicaoY());
+        jogador.setVida(dados.getVida());
+        jogador.setPosicaoX(dados.getPosicaoX());
+        jogador.setPosicaoY(dados.getPosicaoY());
 
         return jogadorRepository.save(jogador);
     }
 
-    // Remover jogador
     public void excluir(int usuarioId) {
+
         if (!jogadorRepository.existsById(usuarioId)) {
-            throw new RuntimeException("Jogador não existe");
+            throw new RuntimeException("Jogador não existe.");
         }
+
         jogadorRepository.deleteById(usuarioId);
     }
 
-    // Listar todos os jogadores
     public List<JogadorEntity> listarTodos() {
         return jogadorRepository.findAll();
     }

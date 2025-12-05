@@ -12,9 +12,14 @@ public class LoginService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public boolean validarLogin(String usuario, String senha) {
+    public boolean validarCredenciais(String usuario, String senha) {
         UsuarioEntity user = usuarioRepository.findByUsuarioAndSenha(usuario, senha);
         return user != null;
+    }
+
+    public Integer obterUsuarioId(String usuario, String senha) {
+        UsuarioEntity user = usuarioRepository.findByUsuarioAndSenha(usuario, senha);
+        return (user != null) ? user.getId() : null;
     }
 
     public Integer cadastrarUsuario(String usuario, String senha) {
@@ -28,17 +33,6 @@ public class LoginService {
         novo.setSenha(senha);
 
         UsuarioEntity salvo = usuarioRepository.save(novo);
-
         return salvo.getId();
-    }
-
-    public Integer obterUsuarioId(String usuario, String senha) {
-        UsuarioEntity user = usuarioRepository.findByUsuarioAndSenha(usuario, senha);
-
-        if (user != null) {
-            return user.getId();
-        }
-
-        return null;
     }
 }

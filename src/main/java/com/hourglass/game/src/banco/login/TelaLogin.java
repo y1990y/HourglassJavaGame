@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
 
-import com.hourglass.game.src.banco.dao.PlayerDAO;
-import com.hourglass.game.src.banco.entidadesBD.Jogador;
+import com.hourglass.game.api.entity.JogadorEntity;
+import com.hourglass.game.api.service.JogadorService;
 
 public class TelaLogin extends JFrame {
 
@@ -13,11 +13,15 @@ public class TelaLogin extends JFrame {
     private JPasswordField campoSenha;
 
     private final LoginService loginService;
-    private Consumer<Jogador> callbackLogin;
+    private final JogadorService jogadorService;
+    private final Consumer<JogadorEntity> callbackLogin;
 
-    public TelaLogin(LoginService loginService, Consumer<Jogador> callbackLogin) {
+    public TelaLogin(LoginService loginService,
+                     JogadorService jogadorService,
+                     Consumer<JogadorEntity> callbackLogin) {
 
         this.loginService = loginService;
+        this.jogadorService = jogadorService;
         this.callbackLogin = callbackLogin;
 
         setTitle("Login - Hourglass");
@@ -54,47 +58,47 @@ public class TelaLogin extends JFrame {
             return;
         }
 
-        if (!loginService.validarLogin(usuario, senha)) {
+        if (!loginService.validarCredenciais(usuario, senha)) {
             JOptionPane.showMessageDialog(this, "Usuário ou senha incorretos!");
             return;
         }
 
         Integer usuarioId = loginService.obterUsuarioId(usuario, senha);
+
         if (usuarioId == null) {
-            JOptionPane.showMessageDialog(this, "Erro inesperado ao validar usuário.");
+            JOptionPane.showMessageDialog(this, "Erro inesperado ao carregar usuário.");
             return;
         }
 
-        PlayerDAO playerDAO = new PlayerDAO();
+        JogadorEntity jogadorEntity;
 
-        if (!playerDAO.jogadorExiste(usuarioId)) {
+        try {
+            jogadorEntity = jogadorService.buscarPorId(usuarioId);
+        } catch (Exception e) {
+            jogadorEntity = null;
+        }
+
+        if (jogadorEntity == null) {
 
             String nomePersonagem = JOptionPane.showInputDialog(
                     this,
                     "Bem-vindo! Digite o nome do seu personagem:",
-                    "Nome do Personagem",
+                    "Criar Personagem",
                     JOptionPane.PLAIN_MESSAGE
             );
 
             if (nomePersonagem == null || nomePersonagem.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Você precisa informar um nome para continuar!");
+                JOptionPane.showMessageDialog(this, "É necessário informar um nome!");
                 return;
             }
 
-            playerDAO.criarJogadorNovo(usuarioId, nomePersonagem.trim());
+            jogadorEntity = jogadorService.incluir(usuarioId, nomePersonagem.trim());
         }
 
-        Jogador jogador = playerDAO.buscarJogadorPorId(usuarioId);
-
-        if (jogador == null) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar dados do jogador!");
-            return;
-        }
-
-        JOptionPane.showMessageDialog(this, "Bem-vindo, " + jogador.getNomePersonagem() + "!");
+        JOptionPane.showMessageDialog(this, "Bem-vindo, " + jogadorEntity.getNomeJogador() + "!");
 
         dispose();
-        callbackLogin.accept(jogador);
+        callbackLogin.accept(jogadorEntity);
     }
 
     private void realizarCadastro() {
@@ -107,6 +111,7 @@ public class TelaLogin extends JFrame {
         }
 
         Integer novoId = loginService.cadastrarUsuario(usuario, senha);
+
         if (novoId != null) {
             JOptionPane.showMessageDialog(this, "Usuário cadastrado! Agora realize o login.");
         } else {
@@ -114,4 +119,3 @@ public class TelaLogin extends JFrame {
         }
     }
 }
-

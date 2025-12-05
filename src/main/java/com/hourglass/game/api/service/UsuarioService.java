@@ -17,7 +17,6 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    @SuppressWarnings("null")
     public UsuarioEntity incluir(UsuarioEntity usuario) {
         return usuarioRepository.save(usuario);
     }
