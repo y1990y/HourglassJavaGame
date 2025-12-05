@@ -10,41 +10,39 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import com.hourglass.game.GameApplication;
-import com.hourglass.game.src.banco.dao.PlayerDAO;
-import com.hourglass.game.src.banco.entidadesBD.Jogador;
-import com.hourglass.game.src.banco.login.TelaLogin;
+import com.hourglass.game.api.entity.JogadorEntity;
+import com.hourglass.game.api.service.JogadorService;
 import com.hourglass.game.src.banco.login.LoginService;
+import com.hourglass.game.src.banco.login.TelaLogin;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        // Necessário para o Swing funcionar com Spring Boot
         System.setProperty("java.awt.headless", "false");
 
-        // Inicia o Spring Boot SEM modo headless
         SpringApplication app = new SpringApplication(GameApplication.class);
         app.setHeadless(false);
         ApplicationContext context = app.run(args);
 
-        // Obtém LoginService do Spring
         LoginService loginService = context.getBean(LoginService.class);
+        JogadorService jogadorService = context.getBean(JogadorService.class);
 
-        // Inicia a tela de login na thread correta do Swing
-        SwingUtilities.invokeLater(() -> abrirTelaLogin(loginService));
+        SwingUtilities.invokeLater(() -> abrirTelaLogin(loginService, jogadorService));
     }
 
-    private static void abrirTelaLogin(LoginService loginService) {
+    private static void abrirTelaLogin(LoginService loginService, JogadorService jogadorService) {
 
-        new TelaLogin(loginService, jogador -> {
-            // Fez login com sucesso → iniciar jogo!
-            iniciarJogo(jogador);
-        });
+        new TelaLogin(
+                loginService,
+                jogadorService,
+                jogadorEntity -> iniciarJogo(jogadorEntity, jogadorService)
+        );
     }
 
-    private static void iniciarJogo(Jogador jogador) {
+    private static void iniciarJogo(JogadorEntity jogadorEntity, JogadorService jogadorService) {
 
-        PainelJogo painelJogo = new PainelJogo(jogador);
+        PainelJogo painelJogo = new PainelJogo(jogadorEntity);
 
         JFrame janela = new JFrame();
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,19 +57,25 @@ public class Main {
         painelJogo.setupJogo();
         painelJogo.startThreadJogo();
 
-        // Salvar posição ao fechar
         janela.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
 
-                PlayerDAO dao = new PlayerDAO();
-                dao.atualizarPosicao(
-                        painelJogo.player.getJogadorId(),
-                        painelJogo.player.mundoX,
-                        painelJogo.player.mundoY
-                );
+                try {
+                    painelJogo.player.syncToEntity();
 
-                System.out.println("Posição salva ao sair!");
+                    JogadorEntity atualizado = painelJogo.player.getJogadorEntity();
+
+                    jogadorService.atualizar(atualizado.getUsuarioId(), atualizado);
+
+                    // System.out.println("Posição e vida salva no banco:");
+                    // System.out.println("X = " + atualizado.getPosicaoX());
+                    // System.out.println("Y = " + atualizado.getPosicaoY());
+                    // System.out.println("Vida = " + atualizado.getVida());
+
+                } catch (Exception ex) {
+                    System.out.println("Erro ao salvar dados do jogador: " + ex.getMessage());
+                }
             }
         });
     }

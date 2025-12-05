@@ -1,15 +1,13 @@
 package com.hourglass.game.api.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.hourglass.game.api.entity.JogadorEntity;
-import com.hourglass.game.api.entity.UsuarioEntity;
 import com.hourglass.game.api.repository.JogadorRepository;
 import com.hourglass.game.api.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,68 +16,49 @@ public class JogadorService {
     private final JogadorRepository jogadorRepository;
     private final UsuarioRepository usuarioRepository;
 
-    // ✅ Equivalente ao jogadorExiste(int usuarioId)
-    public boolean jogadorExiste(Integer usuarioId) {
-        return jogadorRepository.existsByUsuarioId(usuarioId);
-    }
+    public JogadorEntity incluir(int usuarioId, String nomeJogador) {
 
-    // ✅ Equivalente ao criarJogadorNovo(int usuarioId, String nomePersonagem)
-    public JogadorEntity criarJogadorNovo(Integer usuarioId, String nomePersonagem) {
+        if (jogadorRepository.existsById(usuarioId)) {
+            throw new RuntimeException("Jogador já existe");
+        }
 
-        UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         JogadorEntity jogador = new JogadorEntity();
-        jogador.setUsuario(usuario);
         jogador.setUsuarioId(usuarioId);
-        jogador.setNomeJogador(nomePersonagem);
-        jogador.setVida(100);
-        jogador.setPosicaoX(1152);
-        jogador.setPosicaoY(960);
+        jogador.setNomeJogador(nomeJogador);
 
         return jogadorRepository.save(jogador);
     }
 
-    // ✅ Equivalente ao buscarJogadorPorId(int usuarioId)
-    public JogadorEntity buscarPorUsuarioId(Integer usuarioId) {
-        return jogadorRepository.findByUsuarioId(usuarioId)
-            .orElseThrow(() -> new RuntimeException("Jogador não encontrado"));
+    public JogadorEntity buscarPorId(int usuarioId) {
+        return jogadorRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Jogador não encontrado."));
     }
 
-    // ✅ Equivalente ao atualizarPosicao(int jogadorId, int x, int y)
-    public JogadorEntity atualizarPosicao(Integer usuarioId, int x, int y) {
+    public JogadorEntity atualizar(int usuarioId, JogadorEntity dados) {
 
-        JogadorEntity jogador = buscarPorUsuarioId(usuarioId);
+        JogadorEntity jogador = jogadorRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Jogador não encontrado"));
 
-        jogador.setPosicaoX(x);
-        jogador.setPosicaoY(y);
+        jogador.setVida(dados.getVida());
+        jogador.setPosicaoX(dados.getPosicaoX());
+        jogador.setPosicaoY(dados.getPosicaoY());
 
         return jogadorRepository.save(jogador);
     }
 
-    // ✅ Já estava certo no seu código
-    public JogadorEntity incluir(JogadorEntity jogador) {
-        return jogadorRepository.save(jogador);
-    }
+    public void excluir(int usuarioId) {
 
-    public JogadorEntity editar(int id, JogadorEntity jogador) {
+        if (!jogadorRepository.existsById(usuarioId)) {
+            throw new RuntimeException("Jogador não existe.");
+        }
 
-        return jogadorRepository.findById(id)
-            .map(jogadorExistente -> {
-                jogadorExistente.setNomeJogador(jogador.getNomeJogador());
-                jogadorExistente.setVida(jogador.getVida());
-                jogadorExistente.setPosicaoX(jogador.getPosicaoX());
-                jogadorExistente.setPosicaoY(jogador.getPosicaoY());
-                jogadorExistente.setDataSalvo(jogador.getDataSalvo());
-                return jogadorRepository.save(jogadorExistente);
-            }).orElse(null);
+        jogadorRepository.deleteById(usuarioId);
     }
 
     public List<JogadorEntity> listarTodos() {
         return jogadorRepository.findAll();
-    }
-
-    public void excluir(Integer id) {
-        jogadorRepository.deleteById(id);
     }
 }

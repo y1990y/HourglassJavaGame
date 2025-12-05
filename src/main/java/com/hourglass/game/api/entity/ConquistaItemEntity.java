@@ -1,5 +1,6 @@
 package com.hourglass.game.api.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class ConquistaItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "conquista_id")
     private int idConquista;
 
     private String nomeConquista;
@@ -28,8 +30,7 @@ public class ConquistaItemEntity {
 
     private int qtdNecessaria;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private ItemEntity item;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "item_id", nullable = false)
+    private ItemEntity itemId;
 }
-

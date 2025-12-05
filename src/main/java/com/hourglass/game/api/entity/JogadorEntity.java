@@ -1,41 +1,46 @@
 package com.hourglass.game.api.entity;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "Jogadores")
-@AllArgsConstructor
-@NoArgsConstructor
+import java.time.LocalDateTime;
+
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "jogador")
 public class JogadorEntity {
 
     @Id
     @Column(name = "usuario_id")
-    private int usuarioId;
+    private Integer usuarioId;
 
+    @Column(name = "nome_jogador", nullable = false)
     private String nomeJogador;
 
+    @Column(name = "vida")
     private int vida = 100;
 
+    @Column(name = "posicao_x")
     private int posicaoX = 1152;
 
+    @Column(name = "posicao_y")
     private int posicaoY = 960;
 
-    private LocalDateTime dataSalvo = LocalDateTime.now();
+    @Column(name = "data_salvo")
+    private LocalDateTime dataSalvo;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "usuario_id")
-    private UsuarioEntity usuario;
+    @PrePersist
+    public void prePersist() {
+        if (dataSalvo == null)
+            dataSalvo = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        dataSalvo = LocalDateTime.now();
+    }
 }

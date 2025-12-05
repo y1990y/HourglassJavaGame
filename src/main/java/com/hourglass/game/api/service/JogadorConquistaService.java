@@ -1,10 +1,13 @@
 package com.hourglass.game.api.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.hourglass.game.api.entity.JogadorConquistaEntity;
+import com.hourglass.game.api.entity.JogadorConquistaId;
 import com.hourglass.game.api.repository.JogadorConquistaRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -13,39 +16,38 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JogadorConquistaService {
 
-    private final JogadorConquistaRepository JogadorConquistaRepository;
+    private final JogadorConquistaRepository jogadorConquistaRepository;
 
-    public JogadorConquistaEntity incluir(JogadorConquistaEntity JC) {
-        return JogadorConquistaRepository.save(JC);
+     public JogadorConquistaEntity incluir(JogadorConquistaEntity JC) {
+        if (JC.getDataConquista() == null) {
+            JC.setDataConquista(LocalDateTime.now());
+        }
+        return jogadorConquistaRepository.save(JC);
     }
 
-    public JogadorConquistaEntity editar(
-            int jogadorId, int conquistaId, JogadorConquistaEntity JC) {
+    public JogadorConquistaEntity editar(int jogadorId, int conquistaId, JogadorConquistaEntity JC) {
+        JogadorConquistaId id = new JogadorConquistaId(jogadorId, conquistaId);
+        Optional<JogadorConquistaEntity> opt = jogadorConquistaRepository.findById(id);
 
-        JogadorConquistaEntity JCExistente =
-                JogadorConquistaRepository.findByJogadorIdAndConquistaId(jogadorId, conquistaId);
-
-        if (JCExistente != null) {
-
-            JCExistente.setDataConquista(JC.getDataConquista());
-
-            return JogadorConquistaRepository.save(JCExistente);
+        if (opt.isPresent()) {
+            JogadorConquistaEntity existente = opt.get();
+            if (JC.getDataConquista() != null) {
+                existente.setDataConquista(JC.getDataConquista());
+            }
+            return jogadorConquistaRepository.save(existente);
         } else {
             return null;
         }
     }
 
     public List<JogadorConquistaEntity> listarTodos() {
-        return JogadorConquistaRepository.findAll();
+        return jogadorConquistaRepository.findAll();
     }
 
     public void excluir(int jogadorId, int conquistaId) {
-
-        JogadorConquistaEntity JC =
-                JogadorConquistaRepository.findByJogadorIdAndConquistaId(jogadorId, conquistaId);
-
-        if (JC != null) {
-            JogadorConquistaRepository.delete(JC);
+        JogadorConquistaId id = new JogadorConquistaId(jogadorId, conquistaId);
+        if (jogadorConquistaRepository.existsById(id)) {
+            jogadorConquistaRepository.deleteById(id);
         }
     }
 }

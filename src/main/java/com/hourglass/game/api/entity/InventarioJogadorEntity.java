@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,11 +33,13 @@ public class InventarioJogadorEntity {
     private int totalColetado;
 
     @ManyToOne
-    @JoinColumn(name = "jogador_id", insertable = false, updatable = false)
+    @MapsId("jogadorId")
+    @JoinColumn(name = "jogador_id")
     private JogadorEntity jogador;
 
     @ManyToOne
-    @JoinColumn(name = "item_id", insertable = false, updatable = false)
+    @MapsId("itemId")
+    @JoinColumn(name = "item_id")
     private ItemEntity item;
 }
 

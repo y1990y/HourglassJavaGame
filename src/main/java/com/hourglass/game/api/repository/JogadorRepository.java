@@ -9,10 +9,4 @@ import com.hourglass.game.api.entity.JogadorEntity;
 
 @Repository
 public interface JogadorRepository extends JpaRepository<JogadorEntity, Integer> {
-     // Equivalente ao: SELECT 1 FROM jogadores WHERE usuario_id = ?
-    boolean existsByUsuarioId(Integer usuarioId);
-
-    // Equivalente ao: SELECT * FROM jogadores WHERE usuario_id = ?
-    Optional<JogadorEntity> findByUsuarioId(Integer usuarioId);
-
 }

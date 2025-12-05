@@ -1,51 +1,46 @@
 package com.hourglass.game.api.service;
+
+import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
 
 import com.hourglass.game.api.entity.UsuarioEntity;
 import com.hourglass.game.api.repository.UsuarioRepository;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    private final UsuarioRepository UsuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public UsuarioEntity incluir(UsuarioEntity Usuario) {
-        return UsuarioRepository.save(Usuario);
+    public UsuarioEntity incluir(UsuarioEntity usuario) {
+        return usuarioRepository.save(usuario);
     }
 
-    public UsuarioEntity editar(int id, UsuarioEntity Usuario) {
+    public UsuarioEntity editar(int id, UsuarioEntity usuarioAtualizado) {
+        Optional<UsuarioEntity> usuarioExistente = usuarioRepository.findById(id);
 
-        Optional<UsuarioEntity> UsuarioExistente =
-                UsuarioRepository.findById(id);
+        if (usuarioExistente.isPresent()) {
+            UsuarioEntity usuarioDb = usuarioExistente.get();
 
-        if (UsuarioExistente.isPresent()) {
+            usuarioDb.setUsuario(usuarioAtualizado.getUsuario());
+            usuarioDb.setSenha(usuarioAtualizado.getSenha());
 
-            UsuarioEntity UsuarioAtualizado = UsuarioExistente.get();
-            UsuarioAtualizado.setUsuario(Usuario.getUsuario());
-            UsuarioAtualizado.setSenha(Usuario.getSenha());
-            UsuarioAtualizado.setUpdatedAt(LocalDateTime.now());
-
-            return UsuarioRepository.save(UsuarioAtualizado);
+            return usuarioRepository.save(usuarioDb);
         } else {
             return null;
         }
     }
 
     public List<UsuarioEntity> listarTodos() {
-        return UsuarioRepository.findAll();
+        return usuarioRepository.findAll();
     }
 
-    public void excluir(Integer id) {
-        UsuarioRepository.deleteById(id);
+    public void excluir(@NonNull Integer id) {
+        usuarioRepository.deleteById(id);
     }
 }
-
-

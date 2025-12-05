@@ -23,17 +23,17 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(value = "/jogador-conquista")
 public class JogadorConquistaController {
 
-private final JogadorConquistaService JogadorConquistaService;
+private final JogadorConquistaService jogadorConquistaService;
 
     @GetMapping
     public ResponseEntity<List<JogadorConquistaEntity>> listarTodos() {
-        List<JogadorConquistaEntity> lista = JogadorConquistaService.listarTodos();
+        List<JogadorConquistaEntity> lista = jogadorConquistaService.listarTodos();
         return ResponseEntity.ok().body(lista);
     }
 
     @PostMapping
     public ResponseEntity<JogadorConquistaEntity> incluir(@RequestBody JogadorConquistaEntity JC) {
-        JogadorConquistaEntity novo = JogadorConquistaService.incluir(JC);
+        JogadorConquistaEntity novo = jogadorConquistaService.incluir(JC);
         if (novo != null) {
             return new ResponseEntity<>(novo, HttpStatus.CREATED);
         } else {
@@ -43,7 +43,7 @@ private final JogadorConquistaService JogadorConquistaService;
 
     @PutMapping("/{jogadorId}/{conquistaId}")
     public ResponseEntity<JogadorConquistaEntity> editar(@PathVariable int jogadorId, @PathVariable int conquistaId, @RequestBody JogadorConquistaEntity JC) {
-        JogadorConquistaEntity atualizado = JogadorConquistaService.editar(jogadorId, conquistaId, JC);
+        JogadorConquistaEntity atualizado = jogadorConquistaService.editar(jogadorId, conquistaId, JC);
         if (atualizado != null) {
             return new ResponseEntity<>(atualizado, HttpStatus.OK);
         } else {
@@ -53,7 +53,7 @@ private final JogadorConquistaService JogadorConquistaService;
 
     @DeleteMapping("/{jogadorId}/{conquistaId}")
     public ResponseEntity<Void> excluir(@PathVariable int jogadorId, @PathVariable int conquistaId) {
-        JogadorConquistaService.excluir(jogadorId, conquistaId);
+        jogadorConquistaService.excluir(jogadorId, conquistaId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
