@@ -13,27 +13,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hourglass.game.api.entity.JogadorEntity;
-import com.hourglass.game.api.service.JogadorService;
+import com.hourglass.game.api.entity.JogadorConquistaEntity;
+import com.hourglass.game.api.service.JogadorConquistaService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/jogador")
-public class JogadorController {
+@RequestMapping(value = "/jogador-conquista")
+public class JogadorConquistaController {
 
-private final JogadorService JogadorService;
+private final JogadorConquistaService JogadorConquistaService;
 
     @GetMapping
-    public ResponseEntity<List<JogadorEntity>> listarTodos() {
-        List<JogadorEntity> lista = JogadorService.listarTodos();
+    public ResponseEntity<List<JogadorConquistaEntity>> listarTodos() {
+        List<JogadorConquistaEntity> lista = JogadorConquistaService.listarTodos();
         return ResponseEntity.ok().body(lista);
     }
 
     @PostMapping
-    public ResponseEntity<JogadorEntity> incluir(@RequestBody JogadorEntity Jogador) {
-        JogadorEntity novo = JogadorService.incluir(Jogador);
+    public ResponseEntity<JogadorConquistaEntity> incluir(@RequestBody JogadorConquistaEntity JC) {
+        JogadorConquistaEntity novo = JogadorConquistaService.incluir(JC);
         if (novo != null) {
             return new ResponseEntity<>(novo, HttpStatus.CREATED);
         } else {
@@ -41,9 +41,9 @@ private final JogadorService JogadorService;
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<JogadorEntity> editar(@PathVariable int id, @RequestBody JogadorEntity Jogador) {
-        JogadorEntity atualizado = JogadorService.editar(id, Jogador);
+    @PutMapping("/{jogadorId}/{conquistaId}")
+    public ResponseEntity<JogadorConquistaEntity> editar(@PathVariable int jogadorId, @PathVariable int conquistaId, @RequestBody JogadorConquistaEntity JC) {
+        JogadorConquistaEntity atualizado = JogadorConquistaService.editar(jogadorId, conquistaId, JC);
         if (atualizado != null) {
             return new ResponseEntity<>(atualizado, HttpStatus.OK);
         } else {
@@ -51,9 +51,9 @@ private final JogadorService JogadorService;
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable int id) {
-        JogadorService.excluir(id);
+    @DeleteMapping("/{jogadorId}/{conquistaId}")
+    public ResponseEntity<Void> excluir(@PathVariable int jogadorId, @PathVariable int conquistaId) {
+        JogadorConquistaService.excluir(jogadorId, conquistaId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

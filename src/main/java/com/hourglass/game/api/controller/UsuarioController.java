@@ -20,16 +20,17 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/usuarios")
+@RequestMapping(value = "/usuario")
 public class UsuarioController {
-    private final UsuarioService UsuarioService;
 
-    @GetMapping 
+private final UsuarioService UsuarioService;
+
+    @GetMapping
     public ResponseEntity<List<UsuarioEntity>> listarTodos() {
         List<UsuarioEntity> lista = UsuarioService.listarTodos();
         return ResponseEntity.ok().body(lista);
     }
-    
+
     @PostMapping
     public ResponseEntity<UsuarioEntity> incluir(@RequestBody UsuarioEntity Usuario) {
         UsuarioEntity novo = UsuarioService.incluir(Usuario);
@@ -41,8 +42,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioEntity> editar(@PathVariable int id,
-        @RequestBody UsuarioEntity Usuario) {
+    public ResponseEntity<UsuarioEntity> editar(@PathVariable int id, @RequestBody UsuarioEntity Usuario) {
         UsuarioEntity atualizado = UsuarioService.editar(id, Usuario);
         if (atualizado != null) {
             return new ResponseEntity<>(atualizado, HttpStatus.OK);
@@ -57,4 +57,3 @@ public class UsuarioController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-

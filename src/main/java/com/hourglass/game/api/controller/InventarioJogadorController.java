@@ -13,27 +13,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hourglass.game.api.entity.JogadorEntity;
-import com.hourglass.game.api.service.JogadorService;
+import com.hourglass.game.api.entity.InventarioJogadorEntity;
+import com.hourglass.game.api.service.InventarioJogadorService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/jogador")
-public class JogadorController {
+@RequestMapping(value = "/inventario")
+public class InventarioJogadorController {
 
-private final JogadorService JogadorService;
+private final InventarioJogadorService InventarioJogadorService;
 
     @GetMapping
-    public ResponseEntity<List<JogadorEntity>> listarTodos() {
-        List<JogadorEntity> lista = JogadorService.listarTodos();
+    public ResponseEntity<List<InventarioJogadorEntity>> listarTodos() {
+        List<InventarioJogadorEntity> lista = InventarioJogadorService.listarTodos();
         return ResponseEntity.ok().body(lista);
     }
 
     @PostMapping
-    public ResponseEntity<JogadorEntity> incluir(@RequestBody JogadorEntity Jogador) {
-        JogadorEntity novo = JogadorService.incluir(Jogador);
+    public ResponseEntity<InventarioJogadorEntity> incluir(@RequestBody InventarioJogadorEntity Inventario) {
+        InventarioJogadorEntity novo = InventarioJogadorService.incluir(Inventario);
         if (novo != null) {
             return new ResponseEntity<>(novo, HttpStatus.CREATED);
         } else {
@@ -41,9 +41,9 @@ private final JogadorService JogadorService;
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<JogadorEntity> editar(@PathVariable int id, @RequestBody JogadorEntity Jogador) {
-        JogadorEntity atualizado = JogadorService.editar(id, Jogador);
+    @PutMapping("/{jogadorId}/{itemId}")
+    public ResponseEntity<InventarioJogadorEntity> editar(@PathVariable int jogadorId, @PathVariable int itemId, @RequestBody InventarioJogadorEntity Inventario) {
+        InventarioJogadorEntity atualizado = InventarioJogadorService.editar(jogadorId, itemId, Inventario);
         if (atualizado != null) {
             return new ResponseEntity<>(atualizado, HttpStatus.OK);
         } else {
@@ -51,9 +51,9 @@ private final JogadorService JogadorService;
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable int id) {
-        JogadorService.excluir(id);
+    @DeleteMapping("/{jogadorId}/{itemId}")
+    public ResponseEntity<Void> excluir(@PathVariable int jogadorId, @PathVariable int itemId) {
+        InventarioJogadorService.excluir(jogadorId, itemId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

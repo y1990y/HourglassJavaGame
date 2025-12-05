@@ -13,27 +13,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hourglass.game.api.entity.JogadorEntity;
-import com.hourglass.game.api.service.JogadorService;
+import com.hourglass.game.api.entity.ItemEntity;
+import com.hourglass.game.api.service.ItemService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/jogador")
-public class JogadorController {
+@RequestMapping(value = "/item")
+public class ItemController {
 
-private final JogadorService JogadorService;
+private final ItemService ItemService;
 
     @GetMapping
-    public ResponseEntity<List<JogadorEntity>> listarTodos() {
-        List<JogadorEntity> lista = JogadorService.listarTodos();
+    public ResponseEntity<List<ItemEntity>> listarTodos() {
+        List<ItemEntity> lista = ItemService.listarTodos();
         return ResponseEntity.ok().body(lista);
     }
 
     @PostMapping
-    public ResponseEntity<JogadorEntity> incluir(@RequestBody JogadorEntity Jogador) {
-        JogadorEntity novo = JogadorService.incluir(Jogador);
+    public ResponseEntity<ItemEntity> incluir(@RequestBody ItemEntity Item) {
+        ItemEntity novo = ItemService.incluir(Item);
         if (novo != null) {
             return new ResponseEntity<>(novo, HttpStatus.CREATED);
         } else {
@@ -42,8 +42,8 @@ private final JogadorService JogadorService;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JogadorEntity> editar(@PathVariable int id, @RequestBody JogadorEntity Jogador) {
-        JogadorEntity atualizado = JogadorService.editar(id, Jogador);
+    public ResponseEntity<ItemEntity> editar(@PathVariable int id, @RequestBody ItemEntity Item) {
+        ItemEntity atualizado = ItemService.editar(id, Item);
         if (atualizado != null) {
             return new ResponseEntity<>(atualizado, HttpStatus.OK);
         } else {
@@ -53,7 +53,7 @@ private final JogadorService JogadorService;
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable int id) {
-        JogadorService.excluir(id);
+        ItemService.excluir(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

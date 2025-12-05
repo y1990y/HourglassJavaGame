@@ -12,22 +12,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Usuarios")
+@Table(name = "Itens")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UsuarioEntity {
+public class ItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int idItem;
 
-    private String usuario;
+    private String nomeItem;
 
-    private String senha;
+    private String tipoItem;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private double valorBase;
 
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private String descricao;
+
+    private String raridade;
 }
 

@@ -11,10 +11,10 @@ public class PlayerDAO {
 
     // Verifica se já existe jogador cadastrado para o usuário
     public boolean jogadorExiste(int usuarioId) {
-        String sql = "SELECT 1 FROM jogador WHERE usuario_id = ?";
+        String sql = "SELECT 1 FROM jogadores WHERE usuario_id = ?";
 
         try (Connection conn = new Conexao().getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, usuarioId);
             ResultSet rs = stmt.executeQuery();
@@ -28,10 +28,10 @@ public class PlayerDAO {
 
     // Cria um jogador novo com o nome informado
     public void criarJogadorNovo(int usuarioId, String nomePersonagem) {
-        String sql = "INSERT INTO jogador (usuario_id, nome_jogador) VALUES (?, ?)";
+        String sql = "INSERT INTO jogadores (usuario_id, nome_jogador) VALUES (?, ?)";
 
         try (Connection conn = new Conexao().getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, usuarioId);
             stmt.setString(2, nomePersonagem);
@@ -45,7 +45,7 @@ public class PlayerDAO {
 
     // Carrega todos os dados do jogador como ResultSet
     public ResultSet carregarDadosJogador(int usuarioId) throws Exception {
-        String sql = "SELECT * FROM jogador WHERE usuario_id = ?";
+        String sql = "SELECT * FROM jogadores WHERE usuario_id = ?";
         Connection conn = new Conexao().getConexao();
 
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -56,10 +56,10 @@ public class PlayerDAO {
 
     // Busca e retorna um objeto Jogador completo
     public Jogador buscarJogadorPorId(int usuarioId) {
-        String sql = "SELECT * FROM jogador WHERE usuario_id = ?";
+        String sql = "SELECT * FROM jogadores WHERE usuario_id = ?";
 
         try (Connection conn = new Conexao().getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, usuarioId);
             ResultSet rs = stmt.executeQuery();
@@ -82,10 +82,10 @@ public class PlayerDAO {
     }
 
     public void atualizarPosicao(int jogadorId, int x, int y) {
-        String sql = "UPDATE jogador SET posicao_x = ?, posicao_y = ? WHERE usuario_id = ?";
+        String sql = "UPDATE jogadores SET posicao_x = ?, posicao_y = ? WHERE usuario_id = ?";
 
         try (Connection conn = new Conexao().getConexao();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, x);
             stmt.setInt(2, y);
