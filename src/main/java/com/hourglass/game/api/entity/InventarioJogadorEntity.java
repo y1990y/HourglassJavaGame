@@ -1,5 +1,7 @@
 package com.hourglass.game.api.entity;
 
+import com.hourglass.game.src.banco.dao.InventarioJogadorDAO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -41,6 +43,11 @@ public class InventarioJogadorEntity {
     @MapsId("itemId")
     @JoinColumn(name = "item_id")
     private ItemEntity item;
+
+    // ✅ MÉTODO NOVO (IGUAL AO SEU ANTIGO PADRÃO)
+    public void salvarViaDAO() {
+        new InventarioJogadorDAO().salvarOuAtualizarInventario(this);
+    }
 }
 
 

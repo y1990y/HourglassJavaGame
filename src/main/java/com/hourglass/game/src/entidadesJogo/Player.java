@@ -1,18 +1,17 @@
 package com.hourglass.game.src.entidadesJogo;
 
+import com.hourglass.game.api.entity.InventarioJogadorEntity;
 import com.hourglass.game.api.entity.JogadorEntity;
 import com.hourglass.game.src.main.ControleTeclado;
 import com.hourglass.game.src.main.PainelJogo;
 
 import javax.imageio.ImageIO;
-
-import com.hourglass.game.src.banco.dao.InventarioDAO;
-import com.hourglass.game.src.banco.entidadesBD.Inventario;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
+
+import com.hourglass.game.src.banco.dao.InventarioJogadorDAO;
 
 public final class Player extends Entidade {
 
@@ -20,8 +19,9 @@ public final class Player extends Entidade {
     private final ControleTeclado conTec;
     private JogadorEntity jogadorEntity;
 
-    private Inventario inventario;
-    private final InventarioDAO inventarioDAO = new InventarioDAO();
+    private InventarioJogadorEntity inventarioChave; // item_id = 1
+    private InventarioJogadorEntity inventarioBuff;  // item_id = 2
+    private final InventarioJogadorDAO inventarioDAO = new InventarioJogadorDAO();
 
     public final int telaX;
     public final int telaY;
@@ -35,7 +35,6 @@ public final class Player extends Entidade {
     public boolean musicaMutada = false;
 
     public Player(PainelJogo pj, ControleTeclado conTec, JogadorEntity jogadorEntity) {
-
         this.pj = pj;
         this.conTec = conTec;
         this.jogadorEntity = jogadorEntity;
@@ -46,9 +45,6 @@ public final class Player extends Entidade {
 
         carregarInventario(jogadorEntity.getUsuarioId());
 
-        this.temChave = inventario.getQtdChaves();
-        this.qtdBuffsColetados = inventario.getQtdBuffsColetados();
-
         telaX = pj.larguraTela / 2;
         telaY = pj.alturaTela / 2;
 
@@ -58,14 +54,29 @@ public final class Player extends Entidade {
     }
 
     private void carregarInventario(int jogadorId) {
-        Inventario invBD = inventarioDAO.carregarInventario(jogadorId);
-
-        if (invBD == null) {
-            invBD = new Inventario();
-            invBD.setJogadorId(jogadorId);
+        // Inventário da chave
+        inventarioChave = inventarioDAO.carregarInventario(jogadorId, 1);
+        if (inventarioChave == null) {
+            inventarioChave = new InventarioJogadorEntity();
+            inventarioChave.setJogadorId(jogadorId);
+            inventarioChave.setItemId(1);
+            inventarioChave.setQuantidadeAtual(0);
+            inventarioChave.setTotalColetado(0);
+            inventarioChave.salvarViaDAO();
         }
+        temChave = inventarioChave.getQuantidadeAtual();
 
-        this.inventario = invBD;
+        // Inventário do buff
+        inventarioBuff = inventarioDAO.carregarInventario(jogadorId, 2);
+        if (inventarioBuff == null) {
+            inventarioBuff = new InventarioJogadorEntity();
+            inventarioBuff.setJogadorId(jogadorId);
+            inventarioBuff.setItemId(2);
+            inventarioBuff.setQuantidadeAtual(0);
+            inventarioBuff.setTotalColetado(0);
+            inventarioBuff.salvarViaDAO();
+        }
+        qtdBuffsColetados = inventarioBuff.getTotalColetado();
     }
 
     private void configurarAreaSolida() {
@@ -133,7 +144,6 @@ public final class Player extends Entidade {
     }
 
     public void update() {
-
         if (conTec.mutePress) {
             if (!musicaMutada) pj.paraMusica();
             else pj.tocaMusica(0);
@@ -210,19 +220,16 @@ public final class Player extends Entidade {
     }
 
     public void coletaObjeto(int i) {
-
         if (i == 999) return;
 
-        inventario.setJogadorId(jogadorEntity.getUsuarioId());
         String nomeObjeto = pj.obj[i].nome;
 
         switch (nomeObjeto) {
-
             case "Chave" -> {
                 pj.tocaSFX(1);
-                inventario.setQtdChaves(inventario.getQtdChaves() + 1);
                 temChave++;
-                inventarioDAO.salvarOuAtualizarInventario(inventario);
+                inventarioChave.setQuantidadeAtual(temChave);
+                inventarioChave.salvarViaDAO();
                 pj.obj[i] = null;
                 pj.ui.exibeMensagem("Você coletou uma chave!");
             }
@@ -234,8 +241,9 @@ public final class Player extends Entidade {
             case "Raio" -> {
                 pj.tocaSFX(3);
                 temRaio++;
-                inventario.setQtdBuffsColetados(inventario.getQtdBuffsColetados() + 1);
-                inventarioDAO.salvarOuAtualizarInventario(inventario);
+                qtdBuffsColetados++;
+                inventarioBuff.setTotalColetado(qtdBuffsColetados);
+                inventarioBuff.salvarViaDAO();
                 pj.obj[i] = null;
             }
         }
@@ -254,12 +262,11 @@ public final class Player extends Entidade {
         }
 
         temChave--;
-        inventario.setQtdChaves(inventario.getQtdChaves() - 1);
-        inventarioDAO.salvarOuAtualizarInventario(inventario);
+        inventarioChave.setQuantidadeAtual(temChave);
+        inventarioChave.salvarViaDAO();
     }
 
     public void render(Graphics g2d) {
-
         BufferedImage imagem = switch (direcao) {
             case "up"    -> selecionarSprite(up_1, up_2, up_3, up_4, up_5, up_6, up_7, up_8);
             case "down"  -> selecionarSprite(down_1, down_2, down_3, down_4, down_5, down_6, down_7, down_8);
