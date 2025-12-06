@@ -1,7 +1,7 @@
 package com.hourglass.game.src.entidadesJogo;
 
-import com.hourglass.game.api.entity.InventarioJogadorEntity;
 import com.hourglass.game.api.entity.JogadorEntity;
+import com.hourglass.game.src.banco.dao.InventarioJogadorDAO;
 import com.hourglass.game.src.main.ControleTeclado;
 import com.hourglass.game.src.main.PainelJogo;
 
@@ -11,16 +11,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-import com.hourglass.game.src.banco.dao.InventarioJogadorDAO;
-
 public final class Player extends Entidade {
 
     private final PainelJogo pj;
     private final ControleTeclado conTec;
     private JogadorEntity jogadorEntity;
 
-    private InventarioJogadorEntity inventarioChave; 
-    private InventarioJogadorEntity inventarioBuff;  
+
     private final InventarioJogadorDAO inventarioDAO = new InventarioJogadorDAO();
 
     public final int telaX;
@@ -43,7 +40,9 @@ public final class Player extends Entidade {
         this.mundoY = jogadorEntity.getPosicaoY();
         this.vida = jogadorEntity.getVida();
 
-        carregarInventario(jogadorEntity.getUsuarioId());
+        this.temChave = 0;
+        this.temRaio = 0;
+        this.qtdBuffsColetados = 0;
 
         telaX = pj.larguraTela / 2;
         telaY = pj.alturaTela / 2;
@@ -51,30 +50,7 @@ public final class Player extends Entidade {
         configurarAreaSolida();
         configurarStatusIniciais();
         carregarSprites();
-    }
-
-    private void carregarInventario(int jogadorId) {
-        inventarioChave = inventarioDAO.carregarInventario(jogadorId, 1);
-        if (inventarioChave == null) {
-            inventarioChave = new InventarioJogadorEntity();
-            inventarioChave.setJogadorId(jogadorId);
-            inventarioChave.setItemId(1);
-            inventarioChave.setQuantidadeAtual(0);
-            inventarioChave.setTotalColetado(0);
-            inventarioChave.salvarViaDAO();
-        }
-        temChave = inventarioChave.getQuantidadeAtual();
-
-        inventarioBuff = inventarioDAO.carregarInventario(jogadorId, 2);
-        if (inventarioBuff == null) {
-            inventarioBuff = new InventarioJogadorEntity();
-            inventarioBuff.setJogadorId(jogadorId);
-            inventarioBuff.setItemId(2);
-            inventarioBuff.setQuantidadeAtual(0);
-            inventarioBuff.setTotalColetado(0);
-            inventarioBuff.salvarViaDAO();
-        }
-        qtdBuffsColetados = inventarioBuff.getTotalColetado();
+        mostrarRankingEpico();
     }
 
     private void configurarAreaSolida() {
@@ -143,8 +119,10 @@ public final class Player extends Entidade {
 
     public void update() {
         if (conTec.mutePress) {
-            if (!musicaMutada) pj.paraMusica();
-            else pj.tocaMusica(0);
+            if (!musicaMutada)
+                pj.paraMusica();
+            else
+                pj.tocaMusica(0);
 
             musicaMutada = !musicaMutada;
             conTec.mutePress = false;
@@ -158,13 +136,15 @@ public final class Player extends Entidade {
             animar();
         }
 
-        if (temRaio > 0) tempoPoder++;
-        if (tempoPoder >= 500) temRaio--;
+        if (temRaio > 0)
+            tempoPoder++;
+        if (tempoPoder >= 500)
+            temRaio--;
     }
 
     private boolean movimentoAtivo() {
         return conTec.upPress || conTec.downPress ||
-               conTec.leftPress || conTec.rightPress;
+                conTec.leftPress || conTec.rightPress;
     }
 
     private void definirDirecao() {
@@ -173,10 +153,14 @@ public final class Player extends Entidade {
         boolean left = conTec.leftPress;
         boolean right = conTec.rightPress;
 
-        if (up && !down) direcao = "up";
-        else if (down && !up) direcao = "down";
-        else if (left && !right) direcao = "left";
-        else if (right && !left) direcao = "right";
+        if (up && !down)
+            direcao = "up";
+        else if (down && !up)
+            direcao = "down";
+        else if (left && !right)
+            direcao = "left";
+        else if (right && !left)
+            direcao = "right";
     }
 
     private void aplicarVelocidade() {
@@ -218,30 +202,42 @@ public final class Player extends Entidade {
     }
 
     public void coletaObjeto(int i) {
-        if (i == 999) return;
+        if (i == 999)
+            return;
 
+        int jogadorId = jogadorEntity.getUsuarioId();
         String nomeObjeto = pj.obj[i].nome;
 
         switch (nomeObjeto) {
+
             case "Chave" -> {
                 pj.tocaSFX(1);
+
                 temChave++;
-                inventarioChave.setQuantidadeAtual(temChave);
-                inventarioChave.salvarViaDAO();
+
+                inventarioDAO.registrarItem(jogadorId, 1, 1);
+
+                atualizarProgressoConquistas();
+
                 pj.obj[i] = null;
                 pj.ui.exibeMensagem("Você coletou uma chave!");
             }
 
             case "Porta" -> {
-                if (temChave > 0) abrirPorta(i);
+                if (temChave > 0)
+                    abrirPorta(i);
             }
 
             case "Raio" -> {
                 pj.tocaSFX(3);
+
                 temRaio++;
                 qtdBuffsColetados++;
-                inventarioBuff.setTotalColetado(qtdBuffsColetados);
-                inventarioBuff.salvarViaDAO();
+
+                inventarioDAO.registrarItem(jogadorId, 2, 1);
+
+                atualizarProgressoConquistas();
+
                 pj.obj[i] = null;
             }
         }
@@ -249,28 +245,33 @@ public final class Player extends Entidade {
 
     private void abrirPorta(int index) {
         pj.tocaSFX(2);
+
         try {
             pj.obj[index].imagem = ImageIO.read(
-                Objects.requireNonNull(getClass().getResourceAsStream("/com/hourglass/game/assets/objetos/door_2.png"))
-            );
+                    Objects.requireNonNull(getClass().getResourceAsStream(
+                            "/com/hourglass/game/assets/objetos/door_2.png")));
+
             pj.obj[index].colisao = false;
             pj.obj[index].nome = "PortaAberta";
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        int jogadorId = jogadorEntity.getUsuarioId();
+
         temChave--;
-        inventarioChave.setQuantidadeAtual(temChave);
-        inventarioChave.salvarViaDAO();
+
+        inventarioDAO.registrarItem(jogadorId, 1, -1);
     }
 
     public void render(Graphics g2d) {
         BufferedImage imagem = switch (direcao) {
-            case "up"    -> selecionarSprite(up_1, up_2, up_3, up_4, up_5, up_6, up_7, up_8);
-            case "down"  -> selecionarSprite(down_1, down_2, down_3, down_4, down_5, down_6, down_7, down_8);
-            case "left"  -> selecionarSprite(left_1, left_2, left_3, left_4, left_5, left_6, left_7, left_8);
+            case "up" -> selecionarSprite(up_1, up_2, up_3, up_4, up_5, up_6, up_7, up_8);
+            case "down" -> selecionarSprite(down_1, down_2, down_3, down_4, down_5, down_6, down_7, down_8);
+            case "left" -> selecionarSprite(left_1, left_2, left_3, left_4, left_5, left_6, left_7, left_8);
             case "right" -> selecionarSprite(right_1, right_2, right_3, right_4, right_5, right_6, right_7, right_8);
-            default      -> null;
+            default -> null;
         };
 
         g2d.drawImage(imagem, telaX, telaY, pj.tamanhoTile, pj.tamanhoTile, null);
@@ -278,8 +279,7 @@ public final class Player extends Entidade {
 
     private BufferedImage selecionarSprite(
             BufferedImage s1, BufferedImage s2, BufferedImage s3, BufferedImage s4,
-            BufferedImage s5, BufferedImage s6, BufferedImage s7, BufferedImage s8
-    ) {
+            BufferedImage s5, BufferedImage s6, BufferedImage s7, BufferedImage s8) {
         return switch (numeroSprite) {
             case 1 -> s1;
             case 2 -> s2;
@@ -302,4 +302,23 @@ public final class Player extends Entidade {
     public JogadorEntity getJogadorEntity() {
         return jogadorEntity;
     }
+
+    private void mostrarRankingEpico() {
+        System.out.println("=== JOGADORES COM ITEM ÉPICO (VIEW) ===");
+
+        var lista = inventarioDAO.listarJogadoresComItemEpico();
+
+        for (String linha : lista) {
+            System.out.println(linha);
+        }
+
+        System.out.println("=======================================");
+    }
+
+    private void atualizarProgressoConquistas() {
+        inventarioDAO.verificarConquistasJogador(
+            jogadorEntity.getUsuarioId()
+            );
+    }
+
 }

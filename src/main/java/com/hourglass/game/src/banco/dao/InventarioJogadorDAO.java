@@ -1,101 +1,190 @@
 package com.hourglass.game.src.banco.dao;
 
-import com.hourglass.game.api.entity.InventarioJogadorEntity;
-import com.hourglass.game.src.banco.conexao.Conexao;
-
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.hourglass.game.src.banco.conexao.Conexao;
+import com.hourglass.game.src.main.PainelJogo;
 
 public class InventarioJogadorDAO {
 
-    public void salvarOuAtualizarInventario(InventarioJogadorEntity inventario) {
+    public void registrarItem(int jogadorId, int itemId, int quantidade) {
+
+        String sql = "{ call sp_registrarItemJogador(?, ?, ?) }";
+
         try {
             Conexao conexao = new Conexao();
             Connection con = conexao.getConexao();
 
-            int qtdChaves = inventario.getQuantidadeAtual() >= 0 ? inventario.getQuantidadeAtual() : 0;
-            int qtdBuffs  = inventario.getTotalColetado() >= 0 ? inventario.getTotalColetado() : 0;
+            try (CallableStatement cs = con.prepareCall(sql)) {
+                cs.setInt(1, jogadorId);
+                cs.setInt(2, itemId);
+                cs.setInt(3, quantidade);
+                cs.execute();
+            }
 
-            InventarioJogadorEntity chave = new InventarioJogadorEntity();
-            chave.setJogadorId(inventario.getJogadorId());
-            chave.setItemId(1);
-            chave.setQuantidadeAtual(qtdChaves);
-            chave.setTotalColetado(0); 
+            con.close();
 
-            InventarioJogadorEntity buff = new InventarioJogadorEntity();
-            buff.setJogadorId(inventario.getJogadorId());
-            buff.setItemId(2);
-            buff.setQuantidadeAtual(0);
-            buff.setTotalColetado(qtdBuffs);
+        } catch (SQLException e) {
+            System.err.println("Erro ao registrar item (procedure): " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Erro geral ao registrar item: " + e.getMessage());
+        }
+    }
 
-            salvarOuAtualizarItem(con, chave);
-            salvarOuAtualizarItem(con, buff);
+    public int buscarQuantidadeAtual(int jogadorId, int itemId) {
+
+        String sql = """
+                    select quantidade_atual
+                    from inventario_jogador
+                    where jogador_id = ? and item_id = ?
+                """;
+
+        try {
+            Conexao conexao = new Conexao();
+            Connection con = conexao.getConexao();
+
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, jogadorId);
+                ps.setInt(2, itemId);
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt("quantidade_atual");
+                }
+            }
 
             con.close();
 
         } catch (Exception e) {
-            System.err.println("Erro ao atualizar inventário: " + e.getMessage());
+            System.err.println("Erro ao buscar quantidade atual: " + e.getMessage());
         }
+
+        return 0;
     }
 
-    private void salvarOuAtualizarItem(Connection con, InventarioJogadorEntity inventario) throws Exception {
+    public int buscarTotalColetado(int jogadorId, int itemId) {
+
         String sql = """
-            MERGE INTO inventario_jogador AS destino
-            USING (SELECT ? AS jogador_id, ? AS item_id, ? AS quantidade_atual, ? AS total_coletado) AS origem
-            ON destino.jogador_id = origem.jogador_id AND destino.item_id = origem.item_id
-            WHEN MATCHED THEN
-                UPDATE SET 
-                    quantidade_atual = origem.quantidade_atual,
-                    total_coletado = origem.total_coletado
-            WHEN NOT MATCHED THEN
-                INSERT (jogador_id, item_id, quantidade_atual, total_coletado)
-                VALUES (origem.jogador_id, origem.item_id, origem.quantidade_atual, origem.total_coletado);
+                    select total_coletado
+                    from inventario_jogador
+                    where jogador_id = ? and item_id = ?
+                """;
+
+        try {
+            Conexao conexao = new Conexao();
+            Connection con = conexao.getConexao();
+
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, jogadorId);
+                ps.setInt(2, itemId);
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt("total_coletado");
+                }
+            }
+
+            con.close();
+
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar total coletado: " + e.getMessage());
+        }
+
+        return 0;
+    }
+
+    public List<String> listarJogadoresComItemEpico() {
+
+        List<String> resultado = new ArrayList<>();
+
+        String sql = "select usuario_id, nome_jogador, total_coletado from v_jogadores_item_epico";
+
+        try {
+            Conexao conexao = new Conexao();
+            Connection con = conexao.getConexao();
+
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    int usuarioId = rs.getInt("usuario_id");
+                    String nome = rs.getString("nome_jogador");
+                    int total = rs.getInt("total_coletado");
+
+                    resultado.add(
+                            "id: " + usuarioId +
+                                    " | jogador: " + nome +
+                                    " | total épicos: " + total);
+                }
+            }
+
+            con.close();
+
+        } catch (Exception e) {
+            System.err.println("Erro ao consultar view v_jogadores_item_epico: " + e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    public void verificarConquistasJogador(int jogadorId) {
+        String sql = """
+            select *
+            from dbo.fc_progresso_conquistas_jogador(?)
         """;
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, inventario.getJogadorId());
-            ps.setInt(2, inventario.getItemId());
-            ps.setInt(3, inventario.getQuantidadeAtual());
-            ps.setInt(4, inventario.getTotalColetado());
-            ps.executeUpdate();
-        }
-    }
-   public InventarioJogadorEntity carregarInventario(int jogadorId, int itemId) {
-    InventarioJogadorEntity inv = new InventarioJogadorEntity();
-    inv.setJogadorId(jogadorId);
-    inv.setItemId(itemId);
+        try {
+            Conexao conexao = new Conexao();
+            Connection con = conexao.getConexao();
 
-    try {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.getConexao();
-
-        int quantidade = carregarQuantidade(con, jogadorId, itemId);
-        if (itemId == 1) {
-            inv.setQuantidadeAtual(quantidade);      
-        } else if (itemId == 2) {
-            inv.setTotalColetado(quantidade);        
-        }
-
-        con.close();
-    } catch (Exception e) {
-        System.err.println("Erro ao carregar inventário: " + e.getMessage());
-    }
-
-    return inv;
-}
-
-
-    private int carregarQuantidade(Connection con, int jogadorId, int itemId) throws Exception {
-        String sql = "SELECT quantidade_atual FROM inventario_jogador WHERE jogador_id = ? AND item_id = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, jogadorId);
-            ps.setInt(2, itemId);
-            var rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("quantidade_atual");
-            } else {
-                return 0;
+
+            ResultSet rs = ps.executeQuery();
+
+            System.out.println("==== PROGRESSO DAS CONQUISTAS ====");
+
+            boolean encontrou = false;
+
+            while (rs.next()) {
+                encontrou = true;
+
+                String nomeConquista = rs.getString("nome_conquista");
+                double progresso = rs.getDouble("progresso_percentual");
+                boolean concluida = rs.getInt("conquista_concluida") == 1;
+
+                if (concluida) {
+                    System.out.println("Conquista concluída: " + nomeConquista);
+                } else {
+                    System.out.println(
+                        "Progresso em " + nomeConquista + ": "
+                        + String.format("%.2f", progresso) + "%"
+                    );
+                }
             }
+
+            if (!encontrou) {
+                System.out.println("⚠ Nenhuma conquista encontrada para o jogador " + jogadorId);
+            }
+
+            System.out.println("=================================");
+
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+            System.err.println("Erro ao consultar conquistas: " + e.getMessage());
         }
     }
+
+
 }
