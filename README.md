@@ -2,75 +2,100 @@
 
 ## Sobre o Projeto
 
-**Hourglass** é um jogo 2D em desenvolvimento, criado como parte do projeto interdisciplinar do curso de **Tecnologia em Informática para Negócios** da **Fatec São José do Rio Preto**. A proposta consiste em implementar um protótipo funcional com foco em manipulação temporal, controle de inventário e persistência de estado do jogo.
+**Hourglass** é um jogo 2D em desenvolvimento como parte do projeto interdisciplinar do curso de **Tecnologia em Informática para Negócios** da **Fatec São José do Rio Preto**.  
+O foco principal está na criação de um protótipo funcional que inclui **controle de jogador**, **sistema de inventário**, **itens**, **conquistas** e **persistência dos dados no banco de dados**.
 
-Este projeto busca integrar conceitos técnicos de programação, modelagem orientada a objetos, arquitetura de software e banco de dados relacional.
+O projeto integra conceitos de programação orientada a objetos, arquitetura em camadas e modelagem de banco de dados relacional.
 
-## Objetivo
+---
 
-O objetivo é construir um sistema que permita ao jogador interagir com o ambiente a sua volta, coletar itens, salvar e restaurar o progresso, além de utilizar a mecânica de retorno no tempo como ferramenta estratégica.
+## Objetivo do Projeto
 
-Durante o processo de desenvolvimento, existe a tentativa de criar:
-- Uma estrutura de classes coesa e reutilizável.
-- Persistência confiável dos dados do jogador.
-- Separação clara entre as camadas do sistema.
-- Uma base sólida para expansão futura.
+O objetivo é implementar um sistema que permita:
+
+- Autenticar usuários.
+- Criar e gerenciar jogadores.
+- Registrar atributos do jogador (vida, posição, nome).
+- Coletar, armazenar e utilizar itens.
+- Registrar conquistas e recompensas.
+- Salvar e carregar todos os dados através do SQL Server.
+
+---
 
 ## Tecnologias Utilizadas
 
-- **Linguagem:** Java
-- **IDE:** IntelliJ IDEA - Visual Studio Code
-- **Banco de Dados:** SQL Server
-- **Modelagem:** UML (Classes, Sequência, ER)
-- **Arquitetura:** Baseada em camadas (Apresentação, Aplicação, Persistência)
+- **Linguagem:** Java  
+- **IDE:** IntelliJ IDEA / Visual Studio Code  
+- **Banco de Dados:** SQL Server  
+- **Modelagem:** UML e DER  
+- **Arquitetura:** Estrutura baseada em camadas (Apresentação → Aplicação → Persistência)
+
+---
 
 ## Organização das Classes
 
-As classes foram organizadas pensando em manter coesão e responsabilidade única:
+A arquitetura foi atualizada para refletir as entidades reais do banco de dados. As principais estruturas são:
 
-- `Usuario`: representa o usuário autenticado no sistema.
-- `Jogador`: herda de `Usuario` e define o personagem controlado.
-- `Item`: descreve os objetos que podem ser coletados.
-- `Inventario`: define a relação entre jogador e itens armazenados.
-- `MapaEstado`: armazena o estado de elementos interativos do ambiente.
-- `SistemaTempo`: gerencia os registros de retorno temporal (snapshots).
+- **Usuario** — representa a conta cadastrada no sistema.
+- **Jogador** — entidade associada ao usuário, contendo nome, vida, posição e demais atributos do personagem.
+- **Item** — tabela e classe que representam objetos coletáveis do jogo.
+- **InventarioJogador** — relaciona um jogador aos itens que possui, controlando quantidade.
+- **JogadorConquista** — armazena conquistas desbloqueadas pelo jogador.
+- **ConquistasItens** — relaciona conquistas a itens de recompensa.
+
+Essas entidades formam a base da lógica principal implementada até o momento.
+
+---
 
 ## Banco de Dados
 
-O projeto utiliza banco de dados relacional com modelagem normalizada e integridade referencial. O controle de persistência será realizado por meio de conexão JDBC com SQL Server.
-
-As principais tabelas do sistema são:
+O sistema utiliza um banco de dados relacional SQL Server com integridade referencial entre as tabelas.  
+As tabelas atualmente implementadas são:
 
 - `usuarios`
-- `jogadores`
-- `inventario`
+- `jogador`
+- `itens`
+- `inventario_jogador`
+- `conquistas_itens`
+- `jogador_conquista`
 
-Scripts SQL encontram-se organizados na pasta `/banco`.
+O código Java interage com o banco, promovendo persistência dos dados do jogador.
 
-## Diagrama Entidade-Relacionamento (DER)
+---
 
-O DER pode ser visualizado no arquivo `DER hourglass.html` incluso na pasta `banco/der/`.
+## Status do Projeto
 
-## Status
+O projeto está em desenvolvimento ativo.  
+As seguintes funcionalidades já estão estruturadas ou em implementação:
 
-O projeto encontra-se em desenvolvimento. Algumas funcionalidades continuam a ser implementadas e testadas. A arquitetura e os principais componentes já estão definidos, com foco nas funcionalidades básicas do projeto.
+- Cadastro e login de usuários  
+- Criação e atualização de jogadores  
+- Registro de posição, vida e atributos básicos  
+- Sistema de itens  
+- Inventário do jogador  
+- Sistema de conquistas integrado ao banco  
+
+Novas mecânicas serão adicionadas conforme o avanço do desenvolvimento.
+
+---
 
 ## Repositório
 
-O código fonte está disponível em:
+🔗 **GitHub:** https://github.com/y1990y/HourglassJavaGame.git
 
-[🔗 GitHub - Hourglass](https://github.com/y1990y/HourglassJavaGame.git)
+---
 
 ## Equipe de Desenvolvimento
 
-| Nome                  | Função                         |
-|-----------------------|--------------------------------|
-| Eduardo Risso de Mira | Desenvolvimento e documentação |
-| Giovanna Peres André  | Desenvolvimento e documentação |
+| Nome                   | Função                         |
+|------------------------|--------------------------------|
+| Eduardo Risso de Mira  | Desenvolvimento e documentação |
+| Giovanna Peres André   | Desenvolvimento e documentação |
+
+---
 
 ## Considerações Finais
 
 'Hourglass' é uma iniciativa pessoal com propósito acadêmico, fundamentada em uma base técnica sólida e estrutura adequada para futura expansão. O projeto tem como foco o avanço paralelamente ao aprendizado contínuo de sua equipe de desenvolvimento, promovendo evolução tanto no código quanto nas habilidades técnicas adquiridas ao longo do processo.
 
 ---
-
