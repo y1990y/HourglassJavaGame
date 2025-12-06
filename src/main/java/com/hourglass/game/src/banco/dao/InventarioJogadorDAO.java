@@ -8,35 +8,26 @@ import java.sql.PreparedStatement;
 
 public class InventarioJogadorDAO {
 
-    /**
-     * Atualiza ou insere o inventário do jogador no banco.
-     * Cria/atualiza duas linhas: 
-     * item_id = 1 → qtd_chaves
-     * item_id = 2 → qtd_buffs_coletados
-     */
     public void salvarOuAtualizarInventario(InventarioJogadorEntity inventario) {
         try {
             Conexao conexao = new Conexao();
             Connection con = conexao.getConexao();
 
-            // Garante valores válidos
             int qtdChaves = inventario.getQuantidadeAtual() >= 0 ? inventario.getQuantidadeAtual() : 0;
             int qtdBuffs  = inventario.getTotalColetado() >= 0 ? inventario.getTotalColetado() : 0;
 
-            // Cria objetos separados para cada item
             InventarioJogadorEntity chave = new InventarioJogadorEntity();
             chave.setJogadorId(inventario.getJogadorId());
             chave.setItemId(1);
             chave.setQuantidadeAtual(qtdChaves);
-            chave.setTotalColetado(0); // obrigatório, não pode ser null
+            chave.setTotalColetado(0); 
 
             InventarioJogadorEntity buff = new InventarioJogadorEntity();
             buff.setJogadorId(inventario.getJogadorId());
             buff.setItemId(2);
-            buff.setQuantidadeAtual(0); // não usado para buffs
+            buff.setQuantidadeAtual(0);
             buff.setTotalColetado(qtdBuffs);
 
-            // Salva cada item individualmente usando o novo método
             salvarOuAtualizarItem(con, chave);
             salvarOuAtualizarItem(con, buff);
 
@@ -47,9 +38,6 @@ public class InventarioJogadorDAO {
         }
     }
 
-    /**
-     * Novo método: recebe o InventarioJogadorEntity e salva/atualiza
-     */
     private void salvarOuAtualizarItem(Connection con, InventarioJogadorEntity inventario) throws Exception {
         String sql = """
             MERGE INTO inventario_jogador AS destino
@@ -72,13 +60,6 @@ public class InventarioJogadorDAO {
             ps.executeUpdate();
         }
     }
-
-    /**
-     * Carrega o inventário completo do jogador.
-     * Retorna um InventarioJogadorEntity com:
-     * quantidadeAtual = qtd_chaves (item 1)
-     * totalColetado = qtd_buffs (item 2)
-     */
    public InventarioJogadorEntity carregarInventario(int jogadorId, int itemId) {
     InventarioJogadorEntity inv = new InventarioJogadorEntity();
     inv.setJogadorId(jogadorId);
@@ -88,12 +69,11 @@ public class InventarioJogadorDAO {
         Conexao conexao = new Conexao();
         Connection con = conexao.getConexao();
 
-        // Carrega quantidade de acordo com itemId
         int quantidade = carregarQuantidade(con, jogadorId, itemId);
         if (itemId == 1) {
-            inv.setQuantidadeAtual(quantidade);       // chaves
+            inv.setQuantidadeAtual(quantidade);      
         } else if (itemId == 2) {
-            inv.setTotalColetado(quantidade);        // buffs
+            inv.setTotalColetado(quantidade);        
         }
 
         con.close();

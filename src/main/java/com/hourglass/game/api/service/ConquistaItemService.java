@@ -22,17 +22,14 @@ public class ConquistaItemService {
 
     public ConquistaItemEntity incluir(int itemId, ConquistaItemEntity conquista) {
 
-        // ✅ REGRA: não permite duplicar a mesma conquista (se existir essa validação no projeto)
         if (conquista.getIdConquista() != 0 &&
             ConquistaItemRepository.existsById(conquista.getIdConquista())) {
             throw new RuntimeException("Conquista já existe");
         }
 
-        // ✅ BUSCA O ITEM OBRIGATORIAMENTE
         ItemEntity item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Item não encontrado"));
 
-        // ✅ ASSOCIA O ITEM GERENCIADO PELO HIBERNATE
         conquista.setItemId(item);
 
         return ConquistaItemRepository.save(conquista);

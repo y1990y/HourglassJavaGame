@@ -19,8 +19,8 @@ public final class Player extends Entidade {
     private final ControleTeclado conTec;
     private JogadorEntity jogadorEntity;
 
-    private InventarioJogadorEntity inventarioChave; // item_id = 1
-    private InventarioJogadorEntity inventarioBuff;  // item_id = 2
+    private InventarioJogadorEntity inventarioChave; 
+    private InventarioJogadorEntity inventarioBuff;  
     private final InventarioJogadorDAO inventarioDAO = new InventarioJogadorDAO();
 
     public final int telaX;
@@ -54,7 +54,6 @@ public final class Player extends Entidade {
     }
 
     private void carregarInventario(int jogadorId) {
-        // Inventário da chave
         inventarioChave = inventarioDAO.carregarInventario(jogadorId, 1);
         if (inventarioChave == null) {
             inventarioChave = new InventarioJogadorEntity();
@@ -66,7 +65,6 @@ public final class Player extends Entidade {
         }
         temChave = inventarioChave.getQuantidadeAtual();
 
-        // Inventário do buff
         inventarioBuff = inventarioDAO.carregarInventario(jogadorId, 2);
         if (inventarioBuff == null) {
             inventarioBuff = new InventarioJogadorEntity();

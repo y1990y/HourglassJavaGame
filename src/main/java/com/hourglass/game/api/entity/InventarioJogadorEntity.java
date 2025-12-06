@@ -44,7 +44,6 @@ public class InventarioJogadorEntity {
     @JoinColumn(name = "item_id")
     private ItemEntity item;
 
-    // ✅ MÉTODO NOVO (IGUAL AO SEU ANTIGO PADRÃO)
     public void salvarViaDAO() {
         new InventarioJogadorDAO().salvarOuAtualizarInventario(this);
     }

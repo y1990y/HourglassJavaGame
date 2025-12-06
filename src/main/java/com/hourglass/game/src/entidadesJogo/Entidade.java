@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public abstract class Entidade {
-    // Essa classe armazena todas as variáveis de entidades presentes no jogo
 
     public int mundoX, mundoY;
     public int speed,trocaSpriteVel;
