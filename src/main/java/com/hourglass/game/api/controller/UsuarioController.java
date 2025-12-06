@@ -31,6 +31,15 @@ private final UsuarioService UsuarioService;
         return ResponseEntity.ok().body(lista);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscar(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(UsuarioService.buscarPorId(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity<UsuarioEntity> incluir(@RequestBody UsuarioEntity Usuario) {
         UsuarioEntity novo = UsuarioService.incluir(Usuario);

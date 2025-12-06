@@ -18,7 +18,7 @@ public class JogadorEntity {
     @Column(name = "usuario_id")
     private Integer usuarioId;
 
-    @Column(name = "nome_jogador", nullable = false)
+    @Column(name = "nome_jogador", nullable = false, length = 100)
     private String nomeJogador;
 
     @Column(name = "vida")
